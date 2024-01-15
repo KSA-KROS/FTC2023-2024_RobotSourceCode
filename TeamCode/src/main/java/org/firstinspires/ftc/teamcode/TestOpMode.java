@@ -33,6 +33,8 @@ public class TestOpMode extends OpMode {
         linear1.setMode(mode);
         linear2.setMode(mode);
 
+        linear1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
         linear1.setMode(mode);
         linear2.setMode(mode);
