@@ -15,7 +15,7 @@ public class DcMotorHW extends Hardware {
 
     // ==================== Initialization ====================
     // Initialize the DC Motor with the standard settings
-    DcMotorHW(String name, HardwareMap hwm, Telemetry tel) {
+    public DcMotorHW(String name, HardwareMap hwm, Telemetry tel) {
         super(name, hwm, tel);
         this.motor = hwm.get(DcMotor.class, this.name);
         this.motor.setPower(0);
@@ -96,7 +96,7 @@ public class DcMotorHW extends Hardware {
         if (this.is_busy) {
             if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
                 this.is_busy = false;
-                this.stop();
+                this.motor.setPower(0);
             }
         }
         else if (this.using_fixation) {
@@ -104,7 +104,7 @@ public class DcMotorHW extends Hardware {
             if (power == 2.0) { // AUTO CORRECTION MODE
                 // ideal_abs_power : ideal motor power (+ or -)
                 // current_abs_power : current motor power (+ or -)
-                double ideal_power = (double)(this.target_ticks - Math.abs(this.motor.getCurrentPosition())) / 10.0;
+                double ideal_power = (double)(this.target_ticks - Math.abs(this.motor.getCurrentPosition())) / this.motor.getMotorType().getTicksPerRev();
                 double current_power = this.motor.getPower();
                 if (ideal_power * current_power < 0) {
                     // if the motor is going to the opposite direction, power = ideal_power
@@ -120,11 +120,11 @@ public class DcMotorHW extends Hardware {
                 }
             }
             if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
-                this.move(-power);
+                this.motor.setPower(-power);
             } else if (Math.abs(this.motor.getCurrentPosition()) < this.target_ticks) {
-                this.move(power);
+                this.motor.setPower(power);
             } else {
-                this.stop();
+                this.motor.setPower(0);
             }
         }
     }

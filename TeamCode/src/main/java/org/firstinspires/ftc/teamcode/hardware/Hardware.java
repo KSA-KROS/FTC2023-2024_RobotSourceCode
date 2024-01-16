@@ -10,7 +10,7 @@ public abstract class Hardware {
     protected HardwareMap hardware_map;
     protected String name;
 
-    Hardware(String name, HardwareMap hwm, Telemetry tel) {
+    public Hardware(String name, HardwareMap hwm, Telemetry tel) {
         this.name = name;
         this.hardware_map = hwm;
         this.telemetry = tel;
