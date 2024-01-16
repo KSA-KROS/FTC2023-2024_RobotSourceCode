@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.part;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class HardwareManager {
-    private List<Hardware> hw_list = new List<Hardware>();
+    private ArrayList<Hardware> hw_list = new ArrayList<>();
 
     public HardwareManager registerHardware(Hardware hardware){
         this.hw_list.add(hardware);

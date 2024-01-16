@@ -50,7 +50,7 @@ public class TestOpMode extends OpMode {
     @Override
     public void loop() {
         // Test 2 : Check the speed of each motor and the accuracy of the encoder
-        double target = 4000;
+        double target = 500; //MAX : 4000
         if (Math.abs(linear1.getCurrentPosition()) > target) {
             linear1.setPower(0);
             is_completed_1 = true;
