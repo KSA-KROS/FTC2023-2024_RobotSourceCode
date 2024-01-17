@@ -61,7 +61,7 @@ public class DcMotorHW extends Hardware {
     }
 
     // ==================== Ordering Commands ====================
-    // Move the motor with the given power
+    // Move the motor with the given power : moving infinitely
     public void move(double power) {
         this.initEncoder();
         this.target_ticks = 0;
@@ -69,14 +69,16 @@ public class DcMotorHW extends Hardware {
         this.motor.setPower(power);
     }
     // Move the motor with the given power and the given ticks
+    // : moving with the given ticks, fixation is automated
     public void move(double power, int ticks) {
         this.initEncoder();
         this.target_ticks = ticks;
         this.is_busy = true;
-        this.fixation_power = 2.0; // AUTO CORRECTION
+        this.fixation_power = 2.0; // AUTOMATED
         this.motor.setPower(power);
     }
     // Move the motor with the given power and the given ticks and the given fixation power
+    // : moving with the given ticks, fixation is manual
     public void move(double power, int ticks, double fixation_power) {
         this.initEncoder();
         this.target_ticks = ticks;
@@ -101,7 +103,7 @@ public class DcMotorHW extends Hardware {
         }
         else if (this.using_fixation) {
             double power = this.fixation_power;
-            if (power == 2.0) { // AUTO CORRECTION MODE
+            if (power == 2.0) { // AUTOMATED MODE
                 // ideal_abs_power : ideal motor power (+ or -)
                 // current_abs_power : current motor power (+ or -)
                 double ideal_power = (double)(this.target_ticks - Math.abs(this.motor.getCurrentPosition())) / this.motor.getMotorType().getTicksPerRev();

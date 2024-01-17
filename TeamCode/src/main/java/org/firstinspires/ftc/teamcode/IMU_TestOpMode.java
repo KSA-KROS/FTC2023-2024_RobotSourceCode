@@ -21,8 +21,7 @@ public class IMU_TestOpMode extends OpMode {
     RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
     public double currentAngle = 0;
-    public double start = 0;
-    public double end = 0;
+    public long prev_time = 0;
 
     @Override
     public void init() {
@@ -35,12 +34,13 @@ public class IMU_TestOpMode extends OpMode {
 
     @Override
     public void start() {
+        prev_time = System.currentTimeMillis();
     }
 
     @Override
     public void loop() {
-        start = System.currentTimeMillis();
-        double timeChange = end - start;
+        long timeChange = System.currentTimeMillis() - prev_time;
+        prev_time = System.currentTimeMillis();
         telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", logoDirection, usbDirection);
 
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -60,7 +60,6 @@ public class IMU_TestOpMode extends OpMode {
         telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", getVelocity(angularVelocity.xRotationRate));
         telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", getVelocity(angularVelocity.yRotationRate));
         telemetry.update();
-        end = System.currentTimeMillis();
     }
 
     public double getVelocity(double rotationRate) {
@@ -70,9 +69,9 @@ public class IMU_TestOpMode extends OpMode {
         return rotationRate;
     }
 
-    public double getAngle(double rotationRate, double time) {
+    public double getAngle(double rotationRate, long time) {
         // time is in milliseconds
-        currentAngle += getVelocity(rotationRate) * time / 100;
+        currentAngle += getVelocity(rotationRate) * (double)time / 1000;
         return currentAngle;
     }
 }
