@@ -14,64 +14,57 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import java.time.Duration;
 import java.time.Instant;
 
+import org.firstinspires.ftc.teamcode.hardware.IMUHW;
+
 @TeleOp(name = "IMU_TestOp", group = "")
 public class IMU_TestOpMode extends OpMode {
-    IMU imu;
-    RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-    RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+    IMUHW imu;
 
     public double currentAngle = 0;
     public long prev_time = 0;
 
+    public YawPitchRollAngles orientation;
+    public AngularVelocity angularVelocity;
+    public double yaw_init;
+    public double pitch_init;
+    public double roll_init;
+
+
+
     @Override
     public void init() {
-        imu = hardwareMap.get(IMU.class, "imu");
+        this.imu = new IMUHW("imu", hardwareMap, telemetry);
+        imu.setOrientation();
 
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
     }
 
     @Override
     public void start() {
         prev_time = System.currentTimeMillis();
+        orientation = imu.getOrientation();
+        angularVelocity = imu.getAngularVelocity();
+        yaw_init = orientation.getYaw(AngleUnit.DEGREES);
+        pitch_init = orientation.getPitch(AngleUnit.DEGREES);
+        roll_init = orientation.getRoll(AngleUnit.DEGREES);
     }
 
     @Override
     public void loop() {
         long timeChange = System.currentTimeMillis() - prev_time;
         prev_time = System.currentTimeMillis();
-        telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", logoDirection, usbDirection);
+        telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", imu.logoDirection, imu.usbDirection);
 
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+        orientation = imu.getOrientation();
+        angularVelocity = imu.getAngularVelocity();
 
-        telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
-        telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
-        telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
+        telemetry.addData("Yaw (Z)", "%.2f Deg.", orientation.getYaw(AngleUnit.DEGREES) - yaw_init);
+        telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES) - pitch_init);
+        telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES) - roll_init);
 
-        telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)\n", getAngle(angularVelocity.zRotationRate, timeChange));
-        //telemetry.addData("Pitch (X)", "%.2f Deg.", getAngle(angularVelocity.xRotationRate, timeChange));
-        //telemetry.addData("Roll (Y)", "%.2f Deg.\n", getAngle(angularVelocity.yRotationRate, timeChange));
-        telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", angularVelocity.zRotationRate);
-        telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", angularVelocity.xRotationRate);
-        telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec\n", angularVelocity.yRotationRate);
-        telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", getVelocity(angularVelocity.zRotationRate));
-        telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", getVelocity(angularVelocity.xRotationRate));
-        telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", getVelocity(angularVelocity.yRotationRate));
+        telemetry.addData("Yaw (Z)", "%.2f Deg.", imu.getAngle('Z', timeChange));
+        telemetry.addData("Yaw (X)", "%.2f Deg.", imu.getAngle('X', timeChange));
+        telemetry.addData("Yaw (Y)", "%.2f Deg.", imu.getAngle('Y', timeChange));
         telemetry.update();
     }
 
-    public double getVelocity(double rotationRate) {
-        if (-0.2 < rotationRate && rotationRate< 0.2) {
-            return 0;
-        }
-        return rotationRate;
-    }
-
-    public double getAngle(double rotationRate, long time) {
-        // time is in milliseconds
-        currentAngle += getVelocity(rotationRate) * (double)time / 1000;
-        return currentAngle;
-    }
 }
