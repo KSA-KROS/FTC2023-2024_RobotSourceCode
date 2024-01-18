@@ -31,10 +31,11 @@ public abstract class Part {
     public Part(HardwareMap hwm, Telemetry tel) {
         this.telemetry = tel;
         this.hardware_map = hwm;
+        this.hardware_manager = new HardwareManager();
     }
 
     // Begin the specific step
-    public void startStep(Command cmd){
+    public void startStep(RobotCommand cmd){
         this.current_command = cmd;
         this.step = 0;
         this.finish = false;
