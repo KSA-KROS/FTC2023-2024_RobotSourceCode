@@ -26,13 +26,12 @@ public class PincerPart extends Part {
     // Constructor
     public PincerPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
-    }
-    public void initPincer(HardwareMap hardwareMap) {
-        this.finger1 = new ServoHW("s0", hardwareMap, telemetry);
-        this.finger2 = new ServoHW("s1", hardwareMap, telemetry);
-        this.wrist = new ServoHW("s2", hardwareMap, telemetry);
-        this.arm1 = new ServoHW("s3", hardwareMap, telemetry);
-        this.arm2 = new ServoHW("s4", hardwareMap, telemetry);
+
+        this.finger1 = new ServoHW("s0", hwm, telemetry);
+        this.finger2 = new ServoHW("s1", hwm, telemetry);
+        this.wrist = new ServoHW("s2", hwm, telemetry);
+        this.arm1 = new ServoHW("s3", hwm, telemetry);
+        this.arm2 = new ServoHW("s4", hwm, telemetry);
 
         finger1.setDirection(Servo.Direction.FORWARD);
         finger2.setDirection(Servo.Direction.REVERSE);
@@ -50,7 +49,6 @@ public class PincerPart extends Part {
         this.hardware_manager.registerHardware(this.wrist);
         this.hardware_manager.registerHardware(this.arm1).registerHardware(this.arm2);
     }
-
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;

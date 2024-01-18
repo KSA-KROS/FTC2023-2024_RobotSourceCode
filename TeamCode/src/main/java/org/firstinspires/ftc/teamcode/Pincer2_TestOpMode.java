@@ -20,18 +20,15 @@ public class Pincer2_TestOpMode extends OpMode {
 
     @Override
     public void init() {
-        pincerPart.initPincer(hardwareMap);
-
-
-
-
-
     }
     @Override
     public void start() {
-        //pincerPart.startStep(PincerPart.Command.GRAB_PIXEL);
-        pincerPart.rotateWrist(true);
-        pincerPart.rotateWrist(false);
+        pincerPart.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
+        pincerPart.startStep(PincerPart.Command.GRAB_PIXEL);
+        pincerPart.startStep(PincerPart.Command.MOVE_DROP_POSITION);
+        pincerPart.startStep(PincerPart.Command.DROP_PIXEL);
+
+
     }
 
     @Override
