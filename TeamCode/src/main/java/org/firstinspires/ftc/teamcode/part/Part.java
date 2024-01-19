@@ -61,12 +61,17 @@ public abstract class Part {
     }
 
     // Stop the robot on the emergency situation
-    public void emergency_stop(){
+    public void emergencyStop() {
         hardware_manager.emergencyStop();
     }
 
+    // Change to normal state
+    public void changeNormalState() {
+
+    }
+
     // Finish the step (Internal)
-    protected void finish_step(){
+    protected void finishStep(){
         this.current_command = Command.NONE;
         this.finish = true;
     }
