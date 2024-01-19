@@ -25,8 +25,8 @@ public class LinearPart extends Part {
     public LinearPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
 
-        this.linear1 = new DcMotorHW("linear1", hwm, telemetry);
-        this.linear2 = new DcMotorHW("linear2", hwm, telemetry);
+        this.linear1 = new DcMotorHW("linear1", hwm, tel);
+        this.linear2 = new DcMotorHW("linear2", hwm, tel);
 
         linear1.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);

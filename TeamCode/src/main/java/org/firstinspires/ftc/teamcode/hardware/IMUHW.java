@@ -74,9 +74,9 @@ public class IMUHW extends Hardware{
         float[] rotationRates = {this.getAngularVelocity().zRotationRate, this.getAngularVelocity().xRotationRate, this.getAngularVelocity().yRotationRate};
         double rotationRate = rotationRates[index];
         imuAngles[index] += getVelocity(rotationRate) * time / 1000;
-        if (imuAngles[index] > 360) {
+        if (imuAngles[index] >= 360) {
             imuAngles[index] -= 360;
-        } else if (imuAngles[index] < -360) {
+        } else if (imuAngles[index] < 0) {
             imuAngles[index] += 360;
         }
         return imuAngles[index];

@@ -62,8 +62,8 @@ public class IMU_TestOpMode extends OpMode {
         telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES) - roll_init);
 
         telemetry.addData("Yaw (Z)", "%.2f Deg.", imu.getAngle('Z', timeChange));
-        telemetry.addData("Yaw (X)", "%.2f Deg.", imu.getAngle('X', timeChange));
-        telemetry.addData("Yaw (Y)", "%.2f Deg.", imu.getAngle('Y', timeChange));
+        telemetry.addData("Pitch (X)", "%.2f Deg.", imu.getAngle('X', timeChange));
+        telemetry.addData("Roll (Y)", "%.2f Deg.", imu.getAngle('Y', timeChange));
         telemetry.update();
     }
 
