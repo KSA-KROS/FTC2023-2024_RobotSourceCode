@@ -4,10 +4,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
+import org.firstinspires.ftc.teamcode.hardware.IMUHW;
 
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
     DcMotorHW wheelFR, wheelFL, wheelBR, wheelBL;
+    IMUHW imuhw;
     public enum Command implements RobotCommand {
         MOVE_FORWARD,
         MOVE_BACKWARD,
@@ -15,8 +17,42 @@ public class WheelPart extends Part {
         MOVE_RIGHT,
         TURN_LEFT,
         TURN_RIGHT,
+        VIEW_RIGHT,
+        VIEW_LEFT,
+        VIEW_FORWARD,
+        VIEW_BACKWARD,
         STOP
     }
+
+    public enum Direction {
+        Forward(new DirectionData(0.65,0.65,0.65,0.65)),
+        Backward(new DirectionData(-0.65,-0.65,-0.65, -0.65)),
+        Left(new DirectionData(-0.5,0.5,0.5,-0.5)),
+        Right(new DirectionData(0.5,-0.5,-0.5,0.5)),
+        TurnLeft(new DirectionData(-0.25,0.25,-0.25,0.25)),
+        TurnRight(new DirectionData(0.25,-0.25,0.25,-0.25));
+
+        private final DirectionData value;
+        Direction(DirectionData i) {this.value = i;}
+        DirectionData get_value() {return this.value;}
+
+        public static class DirectionData{
+            private double front_left_speed = 1.0;
+            private double front_right_speed = 1.0;
+            private double back_left_speed = 1.0;
+            private double back_right_speed = 1.0;
+
+            public double front_left, front_right, back_left, back_right;
+            public DirectionData(double front_left, double front_right, double back_left, double back_right){
+                this.front_left = front_left * front_left_speed;
+                this.front_right = front_right * front_right_speed;
+                this.back_left = back_left * back_left_speed;
+                this.back_right = back_right * back_right_speed;
+            }
+        }
+    }
+
+    public double wheelSpeed = 0.5;
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
 
@@ -25,15 +61,158 @@ public class WheelPart extends Part {
         this.wheelBR = new DcMotorHW("wheelBR", hwm, tel);
         this.wheelBL = new DcMotorHW("wheelBL", hwm, tel);
 
+        IMUHW imuhw = new IMUHW("imu", hwm, tel);
+
         wheelFR.setUsingBrake(true).setUsingEncoder(false);
         wheelFL.setUsingBrake(true).setUsingEncoder(false);
         wheelBR.setUsingBrake(true).setUsingEncoder(false);
         wheelBL.setUsingBrake(true).setUsingEncoder(false);
     }
 
+    public void stop() {
+        wheelFR.stop();
+        wheelFL.stop();
+        wheelBR.stop();
+        wheelBL.stop();
+    }
+
+
+    public void move(double speed, Direction dir){
+        this.wheelFL.move(speed * dir.get_value().front_left);
+        this.wheelFR.move(speed * dir.get_value().front_right);
+        this.wheelBL.move(speed * dir.get_value().back_left);
+        this.wheelBR.move(speed * dir.get_value().back_right);
+    }
+
+    public int move(double speed, double angle) {
+        double currentAngle = imuhw.currentAngle;
+        if (currentAngle > angle) {
+            while (currentAngle > angle) {
+                this.move(speed, Direction.TurnLeft);
+                currentAngle = imuhw.currentAngle;
+                imuhw.update();
+            }
+        } else {
+            while (currentAngle < angle) {
+                this.move(speed, Direction.TurnRight);
+                currentAngle = imuhw.currentAngle;
+                imuhw.update();
+            }
+        }
+        return 0;
+    }
+
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
+
+        // Move
+        if (cmd == WheelPart.Command.MOVE_FORWARD) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.Forward);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.MOVE_BACKWARD) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.Backward);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.MOVE_LEFT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.Left);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.MOVE_RIGHT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.Right);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        }
+
+        // Turn
+        else if (cmd == WheelPart.Command.TURN_LEFT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.TurnLeft);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.TURN_RIGHT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.TurnRight);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.VIEW_RIGHT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, 90.0);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.VIEW_LEFT) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, -90.0);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.VIEW_FORWARD) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, 0.0);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        } else if (cmd == WheelPart.Command.VIEW_BACKWARD) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, -180.0);
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        }
+
+        // Stop
+        else if (cmd == WheelPart.Command.STOP) {
+            switch (this.step) {
+                case 0:
+                    this.stop();
+                    break;
+                case 1:
+                    this.finish_step();
+                    break;
+            }
+        }
 
     }
 }
