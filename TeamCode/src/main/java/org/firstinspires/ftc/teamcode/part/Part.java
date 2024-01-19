@@ -63,6 +63,9 @@ public abstract class Part {
     // Stop the robot on the emergency situation
     public void emergencyStop() {
         hardware_manager.emergencyStop();
+        this.current_command = Command.NONE;
+        this.step = -1;
+        this.finish = true;
     }
 
     // Change to normal state

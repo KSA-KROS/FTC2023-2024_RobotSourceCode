@@ -54,6 +54,8 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
         } else if (gamepad1.dpad_right) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
+        } else {
+            this.wheel_part.startStep(WheelPart.Command.STOP);
         }
 
         if (gamepad1.triangle) {
@@ -89,12 +91,12 @@ public class TeleOpMode extends OpMode {
         }
 
         // Rotate the pincer
-        if (gamepad2.y) { // Triangle
+        if (gamepad2.triangle) {
             this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_POSITION);
         }
 
         // Reset
-        if (gamepad2.a) { // X
+        if (gamepad2.cross) {
             this.pincer_part.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
             this.linear_part.startStep(LinearPart.Command.RESET);
         }
