@@ -106,6 +106,8 @@ public class WheelPart extends Part {
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
 
+
+
         // Move
         if (cmd == WheelPart.Command.MOVE_FORWARD) {
             switch (this.step) {
@@ -113,7 +115,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.Forward);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.MOVE_BACKWARD) {
@@ -122,7 +124,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.Backward);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.MOVE_LEFT) {
@@ -131,7 +133,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.Left);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.MOVE_RIGHT) {
@@ -140,7 +142,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.Right);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
@@ -152,7 +154,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.TurnLeft);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.TURN_RIGHT) {
@@ -161,7 +163,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, Direction.TurnRight);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_RIGHT) {
@@ -170,7 +172,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, 90.0);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_LEFT) {
@@ -179,7 +181,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, -90.0);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_FORWARD) {
@@ -188,7 +190,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, 0.0);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_BACKWARD) {
@@ -197,7 +199,7 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, -180.0);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
@@ -209,7 +211,7 @@ public class WheelPart extends Part {
                     this.stop();
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
