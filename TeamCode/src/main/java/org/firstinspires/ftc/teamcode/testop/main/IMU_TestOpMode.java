@@ -1,6 +1,6 @@
 // Linear Test Code
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.main;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

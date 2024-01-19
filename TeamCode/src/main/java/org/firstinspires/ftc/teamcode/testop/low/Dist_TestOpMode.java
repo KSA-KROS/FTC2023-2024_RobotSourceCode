@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.hardware.DistSensorHW;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-@TeleOp(name = "Dist_TestOpMode", group = "")
+@TeleOp(name = "Dist_TestOpMode", group = "Low")
 public class Dist_TestOpMode extends OpMode {
     DistSensorHW dist1;
 

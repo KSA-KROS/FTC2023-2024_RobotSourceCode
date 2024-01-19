@@ -1,13 +1,13 @@
 // Linear Test Code
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "Eater_TestOp", group = "")
+@TeleOp(name = "Eater_TestOp", group = "Low")
 public class Eater_TestOpMode extends OpMode {
     DcMotor eater1, eater2;
     double ticks_per_rotation_1, ticks_per_rotation_2;

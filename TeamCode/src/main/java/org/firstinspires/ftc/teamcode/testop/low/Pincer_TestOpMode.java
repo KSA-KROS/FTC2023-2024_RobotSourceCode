@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
-@TeleOp(name = "Pincer_TestOp", group = "")
+@TeleOp(name = "Pincer_TestOp", group = "Low")
 public class Pincer_TestOpMode extends OpMode {
     ServoHW finger1, finger2, arm1, arm2, wrist;
 

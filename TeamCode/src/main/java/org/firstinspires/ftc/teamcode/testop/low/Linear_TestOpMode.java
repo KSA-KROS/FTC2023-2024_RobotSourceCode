@@ -1,13 +1,13 @@
 // Linear Test Code
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "Linear_TestOp", group = "")
+@TeleOp(name = "Linear_TestOp", group = "Low")
 public class Linear_TestOpMode extends OpMode {
     DcMotor linear1, linear2;
     double ticks_per_rotation_1, ticks_per_rotation_2;

@@ -1,6 +1,6 @@
 // Linear Test Code
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import android.util.Size;
 
@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
-@TeleOp(name = "AprilTag_TestOpMode", group = "")
+@TeleOp(name = "AprilTag_TestOpMode", group = "Low")
 public class AprilTag_TestOpMode extends OpMode {
 
     @Override

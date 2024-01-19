@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testop.low;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
-@TeleOp(name = "Main TestOp", group = "")
+@TeleOp(name = "Main TestOp", group = "Low")
 public class TestOpMode extends OpMode {
     DcMotorHW motor1, motor2;
     ServoHW servo1, servo2;
