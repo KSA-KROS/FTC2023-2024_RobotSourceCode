@@ -16,11 +16,14 @@ public class PincerPart extends Part {
     public double armGrabPosition = 0.4;
     public double armDropPosition = 0.6;
 
+    public boolean is_opend = true;
+
     public enum Command implements RobotCommand {
         GRAB_PIXEL,
         MOVE_DROP_POSITION,
         DROP_PIXEL,
-        MOVE_GRAB_POSITION
+        MOVE_GRAB_POSITION,
+        GRAB_OR_DROP_PIXEL
     }
 
     // Constructor
@@ -48,7 +51,10 @@ public class PincerPart extends Part {
         this.hardware_manager.registerHardware(this.finger1).registerHardware(this.finger2);
         this.hardware_manager.registerHardware(this.wrist);
         this.hardware_manager.registerHardware(this.arm1).registerHardware(this.arm2);
+
+        this.is_opend = true;
     }
+
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
@@ -59,7 +65,7 @@ public class PincerPart extends Part {
                     this.finger2.moveDirectly(fingerClosePosition, 1000);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
@@ -73,7 +79,7 @@ public class PincerPart extends Part {
                     this.wrist.moveDirectly(wristDropPosition, 1000);
                     break;
                 case 2:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
@@ -84,7 +90,7 @@ public class PincerPart extends Part {
                     this.finger2.moveDirectly(fingerOpenPosition, 1000);
                     break;
                 case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
@@ -98,8 +104,16 @@ public class PincerPart extends Part {
                     this.arm2.moveWithInterval(armGrabPosition, 2000, 1000);
                     break;
                 case 2:
-                    this.finish_step();
+                    this.finishStep();
                     break;
+            }
+        }
+        else if (cmd == Command.GRAB_OR_DROP_PIXEL) {
+            if(this.finger1.getPosition() == fingerOpenPosition && this.finger2.getPosition() == fingerOpenPosition) {
+                this.startStep(Command.GRAB_PIXEL);
+            }
+            else {
+                this.startStep(Command.DROP_PIXEL);
             }
         }
     }

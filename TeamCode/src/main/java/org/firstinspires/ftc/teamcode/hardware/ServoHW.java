@@ -33,6 +33,11 @@ public class ServoHW extends Hardware {
         return this;
     }
 
+    // ==================== Getters ====================
+    public double getPosition() {
+        return this.servo.getPosition();
+    }
+
     // ==================== Ordering Commands ====================
     // Move the motor with the given power
     public void moveDirectly(double position, long interval) {

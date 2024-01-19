@@ -18,7 +18,8 @@ public class LinearPart extends Part {
     public enum Command implements RobotCommand {
         MOVE_UP,
         MOVE_DOWN,
-        STOP
+        STOP,
+        RESET
     }
 
     // Constructor
@@ -32,12 +33,20 @@ public class LinearPart extends Part {
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
     }
 
-    public void moveLinear(double magnitude, int targetTicks, double fixationPower) {
+    public void moveLinear(double magnitude) {
         linear1.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         linear2.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
-        linear1.move(magnitude, targetTicks, fixationPower);
-        linear2.move(magnitude, targetTicks, fixationPower);
+        linear1.move(magnitude);
+        linear2.move(magnitude);
+    }
+
+    public void moveLinearWithTargetTicks(double magnitude, int targetTicks) {
+        linear1.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        linear2.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        linear1.move(magnitude, targetTicks);
+        linear2.move(magnitude, targetTicks);
     }
 
     @Override
@@ -47,10 +56,8 @@ public class LinearPart extends Part {
             switch (this.step) {
                 case 0:
                     expand = true;
-                    moveLinear(linearSpeed, linearLength, linearFixPower);
-                    break;
-                case 1:
-                    this.finish_step();
+                    moveLinear(linearSpeed);
+                    this.finishStep();
                     break;
             }
         }
@@ -58,10 +65,8 @@ public class LinearPart extends Part {
             switch (this.step) {
                 case 0:
                     expand = false;
-                    moveLinear(linearSpeed, linearLength, linearFixPower);
-                    break;
-                case 1:
-                    this.finish_step();
+                    moveLinear(linearSpeed);
+                    this.finishStep();
                     break;
             }
         }
@@ -70,9 +75,7 @@ public class LinearPart extends Part {
                 case 0:
                     linear1.stop();
                     linear2.stop();
-                    break;
-                case 1:
-                    this.finish_step();
+                    this.finishStep();
                     break;
             }
         }
