@@ -12,19 +12,8 @@ import org.firstinspires.ftc.teamcode.part.Part;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
 
-@TeleOp(name = "Pincer_TestOp", group = "")
+@TeleOp(name = "TeleOpMode", group = "")
 public class TeleOpMode extends OpMode {
-    IMUHW imu;
-
-    public double currentAngle = 0;
-    public long prev_time = 0;
-
-    public YawPitchRollAngles orientation;
-    public AngularVelocity angularVelocity;
-    public double yaw_init;
-    public double pitch_init;
-    public double roll_init;
-
     private LinearPart linear_part;
     private PincerPart pincer_part;
     private WheelPart wheel_part;
@@ -36,19 +25,11 @@ public class TeleOpMode extends OpMode {
         this.linear_part = new LinearPart(hardwareMap, telemetry);
         this.pincer_part = new PincerPart(hardwareMap, telemetry);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
-
-        this.imu = new IMUHW("imu", hardwareMap, telemetry);
-        imu.setOrientation();
     }
 
     @Override
     public void start() {
-        prev_time = System.currentTimeMillis();
-        orientation = imu.getOrientation();
-        angularVelocity = imu.getAngularVelocity();
-        yaw_init = orientation.getYaw(AngleUnit.DEGREES);
-        pitch_init = orientation.getPitch(AngleUnit.DEGREES);
-        roll_init = orientation.getRoll(AngleUnit.DEGREES);
+
     }
 
     @Override
@@ -68,22 +49,7 @@ public class TeleOpMode extends OpMode {
 
         this.emergencyOnOFF();
 
-        long timeChange = System.currentTimeMillis() - prev_time;
-        prev_time = System.currentTimeMillis();
-        telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", imu.logoDirection, imu.usbDirection);
-
-        orientation = imu.getOrientation();
-        angularVelocity = imu.getAngularVelocity();
-
-        telemetry.addData("Yaw (Z)", "%.2f Deg.", orientation.getYaw(AngleUnit.DEGREES) - yaw_init);
-        telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES) - pitch_init);
-        telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES) - roll_init);
-
-        telemetry.addData("Yaw (Z)", "%.2f Deg.", imu.getAngle('Z', timeChange));
-        telemetry.addData("Pitch (X)", "%.2f Deg.", imu.getAngle('X', timeChange));
-        telemetry.addData("Roll (Y)", "%.2f Deg.", imu.getAngle('Y', timeChange));
-        telemetry.update();
-
+        this.telemetry.update();
     }
 
     private void processGamepad1() {
@@ -99,11 +65,7 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
         } else if (gamepad1.right_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_RIGHT);
-        } else {
-            this.wheel_part.startStep(WheelPart.Command.STOP);
-        }
-
-        if (gamepad1.triangle) {
+        } else if (gamepad1.triangle) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_FORWARD);
         } else if (gamepad1.cross) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
@@ -111,6 +73,8 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
         } else if (gamepad1.circle) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
+        } else {
+            this.wheel_part.startStep(WheelPart.Command.STOP);
         }
     }
 
@@ -144,7 +108,7 @@ public class TeleOpMode extends OpMode {
     private void emergencyOnOFF() {
         if (this.is_emergency_mode) {
             if (gamepad1.right_stick_button && gamepad1.left_stick_button
-            && gamepad2.right_stick_button && gamepad2.left_stick_button) {
+                    && gamepad2.right_stick_button && gamepad2.left_stick_button) {
                 // NORMAL STATE
                 this.is_emergency_mode = false;
                 this.gamepad1.rumble(100);
@@ -152,7 +116,7 @@ public class TeleOpMode extends OpMode {
             }
         } else {
             if (gamepad1.right_stick_button || gamepad1.left_stick_button
-            || gamepad2.right_stick_button || gamepad2.left_stick_button) {
+                    || gamepad2.right_stick_button || gamepad2.left_stick_button) {
                 // EMERGENCY STATE
                 this.is_emergency_mode = true;
                 this.pincer_part.emergencyStop();

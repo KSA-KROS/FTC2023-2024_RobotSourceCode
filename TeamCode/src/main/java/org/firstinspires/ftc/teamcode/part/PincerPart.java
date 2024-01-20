@@ -8,14 +8,14 @@ import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class PincerPart extends Part {
     ServoHW finger1, finger2, arm1, arm2, wrist;
-    public double fingerClosePosition = 0.25;
-    public double fingerOpenPosition = 0.4;
+    public double fingerClosePosition = 0.35;
+    public double fingerOpenPosition = 0.5;
 
 
     public double wristDropPosition = 1.0;
-    public double wristGrabPosition = 0.7;
+    public double wristGrabPosition = 0.51;
 
-    public double armGrabPosition = 0.67;
+    public double armGrabPosition = 0.68;
     public double armDropPosition = 0;
 
     public boolean is_opend = true;
@@ -44,11 +44,11 @@ public class PincerPart extends Part {
         arm1.setDirection(Servo.Direction.FORWARD);
         arm2.setDirection(Servo.Direction.REVERSE);
 
-        finger1.setInitialPosition(0.25);
-        finger2.setInitialPosition(0.25);
+        finger1.setInitialPosition(fingerOpenPosition);
+        finger2.setInitialPosition(fingerOpenPosition);
         wrist.setInitialPosition(wristGrabPosition);
-        arm1.moveWithInterval(armGrabPosition, 3000, 1000);
-        arm2.moveWithInterval(armGrabPosition, 3000, 1000);
+        arm1.moveWithInterval(armGrabPosition, 2000, 100);
+        arm2.moveWithInterval(armGrabPosition, 2000, 100);
         //arm1.setInitialPosition(0.5);
         //arm2.setInitialPosition(0.5);
 
@@ -65,8 +65,9 @@ public class PincerPart extends Part {
         if (cmd == Command.GRAB_PIXEL) {
             switch (this.step){
                 case 0:
-                    this.finger1.moveDirectly(fingerClosePosition, 1000);
-                    this.finger2.moveDirectly(fingerClosePosition, 1000);
+                    this.is_opend = false;
+                    this.finger1.moveDirectly(fingerClosePosition, 0);
+                    this.finger2.moveDirectly(fingerClosePosition, 0);
                     break;
                 case 1:
                     this.finishStep();
@@ -76,11 +77,11 @@ public class PincerPart extends Part {
         else if (cmd == Command.MOVE_DROP_POSITION) {
             switch (this.step){
                 case 0:
-                    this.arm1.moveWithInterval(armDropPosition, 2000, 1000);
-                    this.arm2.moveWithInterval(armDropPosition, 2000, 1000);
+                    this.arm1.moveWithInterval(armDropPosition, 2000, 0);
+                    this.arm2.moveWithInterval(armDropPosition, 2000, 0);
                     break;
                 case 1:
-                    this.wrist.moveDirectly(wristDropPosition, 1000);
+                    this.wrist.moveDirectly(wristDropPosition, 0);
                     break;
                 case 2:
                     this.finishStep();
@@ -90,8 +91,9 @@ public class PincerPart extends Part {
         else if (cmd == Command.DROP_PIXEL) {
             switch (this.step){
                 case 0:
-                    this.finger1.moveDirectly(fingerOpenPosition, 1000);
-                    this.finger2.moveDirectly(fingerOpenPosition, 1000);
+                    this.is_opend = true;
+                    this.finger1.moveDirectly(fingerOpenPosition, 0);
+                    this.finger2.moveDirectly(fingerOpenPosition, 0);
                     break;
                 case 1:
                     this.finishStep();
@@ -101,11 +103,11 @@ public class PincerPart extends Part {
         else if (cmd == Command.MOVE_GRAB_POSITION) {
             switch (this.step){
                 case 0:
-                    this.wrist.moveDirectly(wristGrabPosition, 1000);
+                    this.wrist.moveDirectly(wristGrabPosition, 0);
                     break;
                 case 1:
-                    this.arm1.moveWithInterval(armGrabPosition, 2000, 1000);
-                    this.arm2.moveWithInterval(armGrabPosition, 2000, 1000);
+                    this.arm1.moveWithInterval(armGrabPosition, 2000, 0);
+                    this.arm2.moveWithInterval(armGrabPosition, 2000, 0);
                     break;
                 case 2:
                     this.finishStep();
@@ -113,7 +115,7 @@ public class PincerPart extends Part {
             }
         }
         else if (cmd == Command.GRAB_OR_DROP_PIXEL) {
-            if(this.finger1.getPosition() == fingerOpenPosition && this.finger2.getPosition() == fingerOpenPosition) {
+            if(this.is_opend) {
                 this.startStep(Command.GRAB_PIXEL);
             }
             else {

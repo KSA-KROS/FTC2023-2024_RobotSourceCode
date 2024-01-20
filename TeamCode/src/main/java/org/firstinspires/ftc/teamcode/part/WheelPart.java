@@ -95,14 +95,23 @@ public class WheelPart extends Part {
     public int move(double speed, double angle) {
         double currentAngle = imuhw.currentAngle;
         Direction dir;
-        if (currentAngle > angle) {
+        double right = (currentAngle - angle + 360) % 360;
+        double left = (angle - currentAngle + 360) % 360;
+        double level = Math.min(left, right);
+        this.telemetry.addData("Current Angle", currentAngle);
+        this.telemetry.addData("Left", left);
+        this.telemetry.addData("Right", right);
+        this.telemetry.addData("Delta Angle", level);
+        if (left < right) {
             dir = Direction.TurnLeft;
         } else {
             dir = Direction.TurnRight;
         }
         if (currentAngle != angle) {
+            if (level < 10) {
+                speed *= level / 10;
+            }
             move(speed, dir);
-            currentAngle = imuhw.currentAngle;
         }
         return 0;
     }
@@ -160,18 +169,14 @@ public class WheelPart extends Part {
         } else if (cmd == WheelPart.Command.VIEW_RIGHT) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, 90.0);
-                    break;
-                case 1:
+                    this.move(wheelSpeed, -90.0);
                     this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_LEFT) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, -90.0);
-                    break;
-                case 1:
+                    this.move(wheelSpeed, 90.0);
                     this.finishStep();
                     break;
             }
@@ -179,17 +184,13 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, 0.0);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
         } else if (cmd == WheelPart.Command.VIEW_BACKWARD) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, -180.0);
-                    break;
-                case 1:
+                    this.move(wheelSpeed, 180.0);
                     this.finishStep();
                     break;
             }
@@ -200,8 +201,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.stop();
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }

@@ -85,7 +85,9 @@ public class IMUHW extends Hardware{
 
     @Override
     public void update() {
-
+        long timeChange = System.currentTimeMillis() - prev_time;
+        prev_time = System.currentTimeMillis();
+        this.currentAngle = this.getAngle('Z', timeChange);
     }
 
     public boolean isFinished() {

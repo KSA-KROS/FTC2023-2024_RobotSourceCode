@@ -72,6 +72,7 @@ public class ServoHW extends Hardware {
                 this.servo.setPosition(this.target_value);
                 this.command_end_time = 0;
             } else if (this.command_end_time < System.currentTimeMillis()) { // When command is ended (action + resting)
+                this.servo.setPosition(this.target_value);
                 this.command_end_time = 0;
             } else if (this.action_end_time < System.currentTimeMillis()) { // When the action is ended
                 this.servo.setPosition(this.target_value);
