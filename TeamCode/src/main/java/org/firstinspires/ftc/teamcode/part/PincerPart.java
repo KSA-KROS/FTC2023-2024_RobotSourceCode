@@ -18,14 +18,18 @@ public class PincerPart extends Part {
     public double armGrabPosition = 0.68;
     public double armDropPosition = 0;
 
-    public boolean is_opend = true;
+    public boolean is_left_opend = true;
+    public boolean is_right_opend = true;
 
     public enum Command implements RobotCommand {
-        GRAB_PIXEL,
+        GRAB_PIXEL_LEFT,
+        GRAB_PIXEL_RIGHT,
         MOVE_DROP_POSITION,
-        DROP_PIXEL,
+        DROP_PIXEL_LEFT,
+        DROP_PIXEL_RIGHT,
         MOVE_GRAB_POSITION,
-        GRAB_OR_DROP_PIXEL
+        GRAB_OR_DROP_PIXEL_LEFT,
+        GRAB_OR_DROP_PIXEL_RIGHT,
     }
 
     // Constructor
@@ -56,18 +60,53 @@ public class PincerPart extends Part {
         this.hardware_manager.registerHardware(this.wrist);
         this.hardware_manager.registerHardware(this.arm1).registerHardware(this.arm2);
 
-        this.is_opend = true;
+        this.is_left_opend = true;
+        this.is_right_opend = true;
     }
 
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
-        if (cmd == Command.GRAB_PIXEL) {
+        if (cmd == Command.GRAB_PIXEL_LEFT) {
             switch (this.step){
                 case 0:
-                    this.is_opend = false;
+                    this.is_left_opend = false;
                     this.finger1.moveDirectly(fingerClosePosition, 0);
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.GRAB_PIXEL_RIGHT) {
+            switch (this.step){
+                case 0:
+                    this.is_right_opend = false;
                     this.finger2.moveDirectly(fingerClosePosition, 0);
+                    this.finishStep();
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.DROP_PIXEL_LEFT) {
+            switch (this.step){
+                case 0:
+                    this.is_left_opend = true;
+                    this.finger1.moveDirectly(fingerOpenPosition, 0);
+                    this.finishStep();
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.DROP_PIXEL_RIGHT) {
+            switch (this.step){
+                case 0:
+                    this.is_right_opend = true;
+                    this.finger2.moveDirectly(fingerOpenPosition, 0);
+                    this.finishStep();
                     break;
                 case 1:
                     this.finishStep();
@@ -88,18 +127,6 @@ public class PincerPart extends Part {
                     break;
             }
         }
-        else if (cmd == Command.DROP_PIXEL) {
-            switch (this.step){
-                case 0:
-                    this.is_opend = true;
-                    this.finger1.moveDirectly(fingerOpenPosition, 0);
-                    this.finger2.moveDirectly(fingerOpenPosition, 0);
-                    break;
-                case 1:
-                    this.finishStep();
-                    break;
-            }
-        }
         else if (cmd == Command.MOVE_GRAB_POSITION) {
             switch (this.step){
                 case 0:
@@ -114,12 +141,24 @@ public class PincerPart extends Part {
                     break;
             }
         }
-        else if (cmd == Command.GRAB_OR_DROP_PIXEL) {
-            if(this.is_opend) {
-                this.startStep(Command.GRAB_PIXEL);
+        else if (cmd == Command.GRAB_OR_DROP_PIXEL_LEFT) {
+            if (this.is_left_opend) {
+                this.finishStep();
+                this.startStep(Command.GRAB_PIXEL_LEFT);
             }
             else {
-                this.startStep(Command.DROP_PIXEL);
+                this.finishStep();
+                this.startStep(Command.DROP_PIXEL_LEFT);
+            }
+        }
+        else if (cmd == Command.GRAB_OR_DROP_PIXEL_RIGHT) {
+            if (this.is_right_opend) {
+                this.finishStep();
+                this.startStep(Command.GRAB_PIXEL_RIGHT);
+            }
+            else {
+                this.finishStep();
+                this.startStep(Command.DROP_PIXEL_RIGHT);
             }
         }
     }

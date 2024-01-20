@@ -21,9 +21,6 @@ public class Linear_TestOpMode extends OpMode {
     public void start() {
         linearPart.startStep(LinearPart.Command.MOVE_UP);
         linearPart.startStep(LinearPart.Command.MOVE_DOWN);
-
-
-
     }
 
     @Override

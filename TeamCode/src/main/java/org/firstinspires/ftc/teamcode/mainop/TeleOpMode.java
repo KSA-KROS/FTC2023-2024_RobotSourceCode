@@ -3,12 +3,8 @@ package org.firstinspires.ftc.teamcode.mainop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.hardware.IMUHW;
+
 import org.firstinspires.ftc.teamcode.part.LinearPart;
-import org.firstinspires.ftc.teamcode.part.Part;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
 
@@ -89,8 +85,11 @@ public class TeleOpMode extends OpMode {
         }
 
         // Pincer Grab and Drop
-        if (gamepad2.left_bumper || gamepad2.right_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL);
+        if (gamepad2.left_bumper) {
+            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
+        }
+        if (gamepad2.right_bumper) {
+            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_RIGHT);
         }
 
         // Rotate the pincer

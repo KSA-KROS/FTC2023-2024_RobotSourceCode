@@ -9,11 +9,8 @@ import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 public class LinearPart extends Part {
     DcMotorHW linear1, linear2;
     public boolean expand = true;
-    public double linearSpeed = 0.5;
-    public double linearFixPower = 0.3;
-    public int linearLength = 2000;
-    public double ticks_per_rotation_1, ticks_per_rotation_2;
-    public boolean is_completed_1 = false, is_completed_2 = false;
+    public double linear_speed_go_down = 0.5;
+    public double linear_speed_go_up = 0.7;
 
     public enum Command implements RobotCommand {
         MOVE_UP,
@@ -56,7 +53,7 @@ public class LinearPart extends Part {
             switch (this.step) {
                 case 0:
                     expand = true;
-                    moveLinear(linearSpeed);
+                    moveLinear(linear_speed_go_up);
                     break;
                 case 1:
                     this.finishStep();
@@ -67,7 +64,7 @@ public class LinearPart extends Part {
             switch (this.step) {
                 case 0:
                     expand = false;
-                    moveLinear(linearSpeed);
+                    moveLinear(linear_speed_go_down);
                     break;
                 case 1:
                     this.finishStep();
@@ -79,6 +76,18 @@ public class LinearPart extends Part {
                 case 0:
                     linear1.stop();
                     linear2.stop();
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.RESET) {
+            switch (this.step) {
+                case 0:
+                    expand = false;
+                    moveLinearWithTargetTicks(linear_speed_go_down,
+                            (int)((this.linear1.getAccumulatedMovingDistance() + this.linear2.getAccumulatedMovingDistance()) * 0.5));
                     break;
                 case 1:
                     this.finishStep();

@@ -1,5 +1,3 @@
-// Linear Test Code
-
 package org.firstinspires.ftc.teamcode.testop.main;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -15,7 +13,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import org.firstinspires.ftc.teamcode.hardware.IMUHW;
-
+/*
 @TeleOp(name = "IMU_TestOp", group = "")
 public class IMU_TestOpMode extends OpMode {
     IMUHW imu;
@@ -68,3 +66,5 @@ public class IMU_TestOpMode extends OpMode {
     }
 
 }
+
+*/

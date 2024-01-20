@@ -93,15 +93,11 @@ public class WheelPart extends Part {
     public boolean turn = false;
 
     public int move(double speed, double angle) {
-        double currentAngle = imuhw.currentAngle;
+        double currentAngle = imuhw.getAngle();
         Direction dir;
         double right = (currentAngle - angle + 360) % 360;
         double left = (angle - currentAngle + 360) % 360;
         double level = Math.min(left, right);
-        this.telemetry.addData("Current Angle", currentAngle);
-        this.telemetry.addData("Left", left);
-        this.telemetry.addData("Right", right);
-        this.telemetry.addData("Delta Angle", level);
         if (left < right) {
             dir = Direction.TurnLeft;
         } else {

@@ -68,10 +68,7 @@ public class ServoHW extends Hardware {
     @Override
     public void update() {
         if (!this.isFinished()) {
-            if (this.command_begin_time == 0) { // When stop event
-                this.servo.setPosition(this.target_value);
-                this.command_end_time = 0;
-            } else if (this.command_end_time < System.currentTimeMillis()) { // When command is ended (action + resting)
+            if (this.command_end_time < System.currentTimeMillis()) { // When command is ended (action + resting)
                 this.servo.setPosition(this.target_value);
                 this.command_end_time = 0;
             } else if (this.action_end_time < System.currentTimeMillis()) { // When the action is ended

@@ -36,10 +36,12 @@ public abstract class Part {
 
     // Begin the specific step
     public void startStep(RobotCommand cmd){
-        this.current_command = cmd;
-        this.step = 0;
-        this.finish = false;
-        this.nextStep();
+        if(this.isFinished()) {
+            this.current_command = cmd;
+            this.step = 0;
+            this.finish = false;
+            this.nextStep();
+        }
     }
 
     // Execute the next step (Internal)

@@ -10,8 +10,10 @@ public class DcMotorHW extends Hardware {
     private DcMotor motor;
     private int target_ticks = 0;
     private boolean is_busy = false;
+    private boolean is_free_moving = false;
     private boolean using_fixation = false;
     private double fixation_power = 0.0;
+    private double accumulated_moving_distance = 0.0;
 
     // ==================== Initialization ====================
     // Initialize the DC Motor with the standard settings
@@ -19,12 +21,14 @@ public class DcMotorHW extends Hardware {
         super(name, hwm, tel);
         this.motor = hwm.get(DcMotor.class, this.name);
         this.motor.setPower(0);
+        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.setDirection(DcMotor.Direction.FORWARD);
         this.setUsingEncoder(false).setUsingBrake(true);
         this.setUsingFixation(false);
     }
 
-    void initEncoder() {
+    public void initEncoder() {
+        this.accumulated_moving_distance += this.motor.getCurrentPosition();
         DcMotor.RunMode mode = this.motor.getMode();
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(mode);
@@ -60,12 +64,19 @@ public class DcMotorHW extends Hardware {
         return this;
     }
 
+    // ==================== Getters ====================
+    // Get Accumulated Moving Distance
+    public double getAccumulatedMovingDistance() {
+        return Math.abs(this.accumulated_moving_distance);
+    }
+
     // ==================== Ordering Commands ====================
     // Move the motor with the given power : moving infinitely
     public void move(double power) {
         this.initEncoder();
         this.target_ticks = 0;
         this.is_busy = false;
+        this.is_free_moving = true;
         this.motor.setPower(power);
     }
     // Move the motor with the given power and the given ticks
@@ -74,6 +85,7 @@ public class DcMotorHW extends Hardware {
         this.initEncoder();
         this.target_ticks = ticks;
         this.is_busy = true;
+        this.is_free_moving = false;
         this.fixation_power = 2.0; // AUTOMATED
         this.motor.setPower(power);
     }
@@ -82,14 +94,17 @@ public class DcMotorHW extends Hardware {
     public void move(double power, int ticks, double fixation_power) {
         this.initEncoder();
         this.target_ticks = ticks;
-        this.is_busy = is_busy;
+        this.is_busy = true;
+        this.is_free_moving = false;
         this.fixation_power = fixation_power;
         this.motor.setPower(power);
     }
     // Stop the motor
     public void stop() {
+        this.initEncoder();
         this.target_ticks = 0;
         this.is_busy = false;
+        this.is_free_moving = false;
         this.motor.setPower(0);
     }
 
@@ -101,7 +116,7 @@ public class DcMotorHW extends Hardware {
                 this.motor.setPower(0);
             }
         }
-        else if (this.using_fixation) {
+        else if (this.using_fixation && !this.is_free_moving) {
             double power = this.fixation_power;
             if (power == 2.0) { // AUTOMATED MODE
                 // ideal_abs_power : ideal motor power (+ or -)

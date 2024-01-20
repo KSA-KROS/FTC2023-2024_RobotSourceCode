@@ -13,25 +13,26 @@ import java.util.Arrays;
 public class IMUHW extends Hardware{
     private IMU imu;
 
-    public double currentAngle = 0;
-    public long prev_time = 0;
-    public double[] imuAngles = {0, 0, 0};
+    private double currentAngle = 0;
+    private long prev_time = 0;
+    private double[] imuAngles = {0, 0, 0};
 
-    public RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
-    public RevHubOrientationOnRobot.UsbFacingDirection  usbDirection;
+    private RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
+    private RevHubOrientationOnRobot.UsbFacingDirection  usbDirection;
 
     public IMUHW(String name, HardwareMap hwm, Telemetry tel) {
         super(name, hwm, tel);
         this.imu = hwm.get(IMU.class, this.name);
+        this.setOrientation();
     }
 
-    public IMUHW setOrientation() {
+    private IMUHW setOrientation() {
         logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
         return this;
     }
 
-    public int directionToInt(char rotationDirection) {
+    private int directionToInt(char rotationDirection) {
         int index = -1;
         switch (rotationDirection) {
             case 'Z':
@@ -66,8 +67,11 @@ public class IMUHW extends Hardware{
         return rotationRate;
     }
 
-    public double getAngle(char rotationDirection, long time) {
+    public double getAngle() {
+        return this.currentAngle;
+    }
 
+    private double calcAngle(char rotationDirection, long time) {
         // char[] directions = {'Z', 'X', 'Y'};
         int index = directionToInt(rotationDirection); // = Arrays.asList(directions).indexOf(rotationDirection);
 
@@ -82,12 +86,11 @@ public class IMUHW extends Hardware{
         return imuAngles[index];
     }
 
-
     @Override
     public void update() {
         long timeChange = System.currentTimeMillis() - prev_time;
         prev_time = System.currentTimeMillis();
-        this.currentAngle = this.getAngle('Z', timeChange);
+        this.currentAngle = this.calcAngle('Z', timeChange);
     }
 
     public boolean isFinished() {
