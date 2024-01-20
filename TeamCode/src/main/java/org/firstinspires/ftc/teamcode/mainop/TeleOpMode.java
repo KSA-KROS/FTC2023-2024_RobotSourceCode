@@ -72,6 +72,7 @@ public class TeleOpMode extends OpMode {
         } else {
             this.wheel_part.startStep(WheelPart.Command.STOP);
         }
+        this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
     }
 
     private void processGamepad2() {

@@ -92,7 +92,7 @@ public class WheelPart extends Part {
 
     public boolean turn = false;
 
-    public int move(double speed, double angle) {
+    public void move(double speed, double angle) {
         double currentAngle = imuhw.getAngle();
         Direction dir;
         double right = (currentAngle - angle + 360) % 360;
@@ -109,7 +109,29 @@ public class WheelPart extends Part {
             }
             move(speed, dir);
         }
-        return 0;
+    }
+
+    public void moveFreely(double x, double y) {
+        if (x == 0 && y == 0) {
+            this.wheelBL.setUsingBrake(true);
+            this.wheelBR.setUsingBrake(true);
+            this.wheelFL.setUsingBrake(true);
+            this.wheelFR.setUsingBrake(true);
+            this.stop();
+            return;
+        }
+
+        this.wheelBL.setUsingBrake(false);
+        this.wheelBR.setUsingBrake(false);
+        this.wheelFL.setUsingBrake(false);
+        this.wheelFR.setUsingBrake(false);
+
+        double rfbl_factor = (x * -Math.sqrt(0.5) + y * Math.sqrt(0.5)) / (x * x + y * y);
+        double lfbr_factor = (x * Math.sqrt(0.5) + y * Math.sqrt(0.5)) / (x * x + y * y);
+        this.wheelFL.move(this.wheelSpeed * lfbr_factor);
+        this.wheelFR.move(this.wheelSpeed * rfbl_factor);
+        this.wheelBL.move(this.wheelSpeed * rfbl_factor);
+        this.wheelBR.move(this.wheelSpeed * lfbr_factor);
     }
 
     @Override
