@@ -61,12 +61,16 @@ public class WheelPart extends Part {
         this.wheelBR = new DcMotorHW("wheelBR", hwm, tel);
         this.wheelBL = new DcMotorHW("wheelBL", hwm, tel);
 
-        IMUHW imuhw = new IMUHW("imu", hwm, tel);
+        this.imuhw = new IMUHW("imu", hwm, tel);
 
         wheelFR.setUsingBrake(true).setUsingEncoder(false);
         wheelFL.setUsingBrake(true).setUsingEncoder(false);
         wheelBR.setUsingBrake(true).setUsingEncoder(false);
         wheelBL.setUsingBrake(true).setUsingEncoder(false);
+
+        this.hardware_manager.registerHardware(this.wheelFR).registerHardware(this.wheelFL);
+        this.hardware_manager.registerHardware(this.wheelBR).registerHardware(this.wheelBL);
+        this.hardware_manager.registerHardware(this.imuhw);
     }
 
     public void stop() {
@@ -90,13 +94,11 @@ public class WheelPart extends Part {
             while (currentAngle > angle) {
                 this.move(speed, Direction.TurnLeft);
                 currentAngle = imuhw.currentAngle;
-                imuhw.update();
             }
         } else {
             while (currentAngle < angle) {
                 this.move(speed, Direction.TurnRight);
                 currentAngle = imuhw.currentAngle;
-                imuhw.update();
             }
         }
         return 0;
@@ -105,8 +107,6 @@ public class WheelPart extends Part {
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
-
-
 
         // Move
         if (cmd == WheelPart.Command.MOVE_FORWARD) {

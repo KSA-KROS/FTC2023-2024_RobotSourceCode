@@ -57,6 +57,8 @@ public class LinearPart extends Part {
                 case 0:
                     expand = true;
                     moveLinear(linearSpeed);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -66,6 +68,8 @@ public class LinearPart extends Part {
                 case 0:
                     expand = false;
                     moveLinear(linearSpeed);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -75,6 +79,8 @@ public class LinearPart extends Part {
                 case 0:
                     linear1.stop();
                     linear2.stop();
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
