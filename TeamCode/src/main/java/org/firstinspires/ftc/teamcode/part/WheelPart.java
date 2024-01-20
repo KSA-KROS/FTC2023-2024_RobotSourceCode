@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.part;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -25,10 +27,10 @@ public class WheelPart extends Part {
     }
 
     public enum Direction {
-        Forward(new DirectionData(0.65,0.65,0.65,0.65)),
-        Backward(new DirectionData(-0.65,-0.65,-0.65, -0.65)),
-        Left(new DirectionData(-0.5,0.5,0.5,-0.5)),
-        Right(new DirectionData(0.5,-0.5,-0.5,0.5)),
+        Forward(new DirectionData(1,1,1,1)),
+        Backward(new DirectionData(-1,-1,-1, -1)),
+        Left(new DirectionData(-1,1,1,-1)),
+        Right(new DirectionData(1,-1,-1,1)),
         TurnLeft(new DirectionData(-0.25,0.25,-0.25,0.25)),
         TurnRight(new DirectionData(0.25,-0.25,0.25,-0.25));
 
@@ -63,10 +65,10 @@ public class WheelPart extends Part {
 
         this.imuhw = new IMUHW("imu", hwm, tel);
 
-        wheelFR.setUsingBrake(true).setUsingEncoder(false);
-        wheelFL.setUsingBrake(true).setUsingEncoder(false);
-        wheelBR.setUsingBrake(true).setUsingEncoder(false);
-        wheelBL.setUsingBrake(true).setUsingEncoder(false);
+        wheelFR.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelFL.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.REVERSE);
+        wheelBR.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelBL.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.hardware_manager.registerHardware(this.wheelFR).registerHardware(this.wheelFL);
         this.hardware_manager.registerHardware(this.wheelBR).registerHardware(this.wheelBL);
