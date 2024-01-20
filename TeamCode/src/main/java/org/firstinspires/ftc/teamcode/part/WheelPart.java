@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.IMUHW;
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
     DcMotorHW wheelFR, wheelFL, wheelBR, wheelBL;
-    IMUHW imuhw;
+    public IMUHW imuhw;
     public enum Command implements RobotCommand {
         MOVE_FORWARD,
         MOVE_BACKWARD,
@@ -31,8 +31,8 @@ public class WheelPart extends Part {
         Backward(new DirectionData(-1,-1,-1, -1)),
         Left(new DirectionData(-1,1,1,-1)),
         Right(new DirectionData(1,-1,-1,1)),
-        TurnLeft(new DirectionData(-0.25,0.25,-0.25,0.25)),
-        TurnRight(new DirectionData(0.25,-0.25,0.25,-0.25));
+        TurnLeft(new DirectionData(-1,1,-1,1)),
+        TurnRight(new DirectionData(1,-1,1,-1));
 
         private final DirectionData value;
         Direction(DirectionData i) {this.value = i;}
@@ -90,18 +90,19 @@ public class WheelPart extends Part {
         this.wheelBR.move(speed * dir.get_value().back_right);
     }
 
+    public boolean turn = false;
+
     public int move(double speed, double angle) {
         double currentAngle = imuhw.currentAngle;
+        Direction dir;
         if (currentAngle > angle) {
-            while (currentAngle > angle) {
-                this.move(speed, Direction.TurnLeft);
-                currentAngle = imuhw.currentAngle;
-            }
+            dir = Direction.TurnLeft;
         } else {
-            while (currentAngle < angle) {
-                this.move(speed, Direction.TurnRight);
-                currentAngle = imuhw.currentAngle;
-            }
+            dir = Direction.TurnRight;
+        }
+        if (currentAngle != angle) {
+            move(speed, dir);
+            currentAngle = imuhw.currentAngle;
         }
         return 0;
     }

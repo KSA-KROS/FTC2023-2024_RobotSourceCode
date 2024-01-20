@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.mainop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.hardware.IMUHW;
 import org.firstinspires.ftc.teamcode.part.LinearPart;
 import org.firstinspires.ftc.teamcode.part.Part;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
@@ -10,6 +14,17 @@ import org.firstinspires.ftc.teamcode.part.WheelPart;
 
 @TeleOp(name = "Pincer_TestOp", group = "")
 public class TeleOpMode extends OpMode {
+    IMUHW imu;
+
+    public double currentAngle = 0;
+    public long prev_time = 0;
+
+    public YawPitchRollAngles orientation;
+    public AngularVelocity angularVelocity;
+    public double yaw_init;
+    public double pitch_init;
+    public double roll_init;
+
     private LinearPart linear_part;
     private PincerPart pincer_part;
     private WheelPart wheel_part;
@@ -21,11 +36,19 @@ public class TeleOpMode extends OpMode {
         this.linear_part = new LinearPart(hardwareMap, telemetry);
         this.pincer_part = new PincerPart(hardwareMap, telemetry);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
+
+        this.imu = new IMUHW("imu", hardwareMap, telemetry);
+        imu.setOrientation();
     }
 
     @Override
     public void start() {
-
+        prev_time = System.currentTimeMillis();
+        orientation = imu.getOrientation();
+        angularVelocity = imu.getAngularVelocity();
+        yaw_init = orientation.getYaw(AngleUnit.DEGREES);
+        pitch_init = orientation.getPitch(AngleUnit.DEGREES);
+        roll_init = orientation.getRoll(AngleUnit.DEGREES);
     }
 
     @Override
@@ -44,6 +67,23 @@ public class TeleOpMode extends OpMode {
         }
 
         this.emergencyOnOFF();
+
+        long timeChange = System.currentTimeMillis() - prev_time;
+        prev_time = System.currentTimeMillis();
+        telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", imu.logoDirection, imu.usbDirection);
+
+        orientation = imu.getOrientation();
+        angularVelocity = imu.getAngularVelocity();
+
+        telemetry.addData("Yaw (Z)", "%.2f Deg.", orientation.getYaw(AngleUnit.DEGREES) - yaw_init);
+        telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES) - pitch_init);
+        telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES) - roll_init);
+
+        telemetry.addData("Yaw (Z)", "%.2f Deg.", imu.getAngle('Z', timeChange));
+        telemetry.addData("Pitch (X)", "%.2f Deg.", imu.getAngle('X', timeChange));
+        telemetry.addData("Roll (Y)", "%.2f Deg.", imu.getAngle('Y', timeChange));
+        telemetry.update();
+
     }
 
     private void processGamepad1() {
