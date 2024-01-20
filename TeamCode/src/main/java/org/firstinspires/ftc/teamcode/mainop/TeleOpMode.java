@@ -36,7 +36,8 @@ public class TeleOpMode extends OpMode {
         this.wheel_part.update();
 
         if (this.is_emergency_mode) {
-
+            this.processGamepad1WhenEmergency();
+            this.processGamepad2WhenEmergency();
         } else {
             this.processGamepad1();
             this.processGamepad2();
