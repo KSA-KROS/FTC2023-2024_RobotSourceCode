@@ -115,8 +115,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Forward);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -124,8 +122,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Backward);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -133,8 +129,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Left);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -142,8 +136,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Right);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -154,8 +146,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.TurnLeft);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -163,8 +153,6 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.TurnRight);
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }

@@ -55,6 +55,10 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
         } else if (gamepad1.dpad_right) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
+        } else if (gamepad1.left_bumper) {
+            this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
+        } else if (gamepad1.right_bumper) {
+            this.wheel_part.startStep(WheelPart.Command.TURN_RIGHT);
         } else {
             this.wheel_part.startStep(WheelPart.Command.STOP);
         }
@@ -67,12 +71,6 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
         } else if (gamepad1.circle) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
-        }
-
-        if (gamepad1.left_bumper) {
-            this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
-        } else if (gamepad1.left_bumper) {
-            this.wheel_part.startStep(WheelPart.Command.TURN_RIGHT);
         }
     }
 
@@ -109,6 +107,8 @@ public class TeleOpMode extends OpMode {
             && gamepad2.right_stick_button && gamepad2.left_stick_button) {
                 // NORMAL STATE
                 this.is_emergency_mode = false;
+                this.gamepad1.rumble(100);
+                this.gamepad2.rumble(100);
             }
         } else {
             if (gamepad1.right_stick_button || gamepad1.left_stick_button
@@ -118,6 +118,8 @@ public class TeleOpMode extends OpMode {
                 this.pincer_part.emergencyStop();
                 this.linear_part.emergencyStop();
                 this.wheel_part.emergencyStop();
+                this.gamepad1.rumble(500);
+                this.gamepad2.rumble(500);
             }
         }
     }
