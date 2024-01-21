@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
+import org.firstinspires.ftc.teamcode.part.DdalggakPart;
 import org.firstinspires.ftc.teamcode.part.LinearPart;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
@@ -13,6 +14,7 @@ public class TeleOpMode extends OpMode {
     private LinearPart linear_part;
     private PincerPart pincer_part;
     private WheelPart wheel_part;
+    private DdalggakPart ddalggak_part;
 
     boolean is_emergency_mode = false;
 
@@ -21,11 +23,12 @@ public class TeleOpMode extends OpMode {
         this.linear_part = new LinearPart(hardwareMap, telemetry);
         this.pincer_part = new PincerPart(hardwareMap, telemetry);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
+        this.ddalggak_part = new DdalggakPart(hardwareMap, telemetry);
     }
 
     @Override
     public void start() {
-
+        this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
     }
 
     @Override
@@ -33,8 +36,10 @@ public class TeleOpMode extends OpMode {
         // Update the parts
         this.linear_part.update();
         this.pincer_part.update();
-        this.telemetry.addData("Linear Length = ", this.linear_part.getLength());
         this.wheel_part.update(this.linear_part.getLength());
+        this.ddalggak_part.update();
+
+        this.telemetry.addData("Linear Length = ", this.linear_part.getLength());
 
         if (this.is_emergency_mode) {
             this.processGamepad1WhenEmergency();
@@ -97,6 +102,11 @@ public class TeleOpMode extends OpMode {
         // Rotate the pincer
         if (gamepad2.triangle) {
             this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_POSITION);
+        }
+
+        // Ddalggak
+        if (gamepad2.circle) {
+            this.ddalggak_part.startStep(DdalggakPart.Command.DDALGGAK_ACTION);
         }
 
         // Reset
