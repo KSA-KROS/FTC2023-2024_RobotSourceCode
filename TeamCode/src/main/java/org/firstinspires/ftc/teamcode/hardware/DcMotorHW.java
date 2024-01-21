@@ -13,7 +13,7 @@ public class DcMotorHW extends Hardware {
     private boolean is_free_moving = false;
     private boolean using_fixation = false;
     private double fixation_power = 0.0;
-    private double accumulated_moving_distance = 0.0;
+    public double accumulated_moving_distance = 0.0;
 
     // ==================== Initialization ====================
     // Initialize the DC Motor with the standard settings
