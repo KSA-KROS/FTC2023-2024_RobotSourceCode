@@ -81,6 +81,7 @@ public class AutoOpMode extends LinearOpMode {
         if (cmd == Command.DETECT_PIXELS) {
             switch (this.step) {
                 case 0:
+                    // move to detect position
                     wheel_part.startStep(WheelPart.Command.MOVE_DETECT_POS);
                     break;
                 case 1:
@@ -101,13 +102,15 @@ public class AutoOpMode extends LinearOpMode {
                     wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
                     break;
                 case 3:
-                    startStep(Command.DROP_PIXELS);
+                    this.startStep(Command.DROP_PIXELS);
                     break;
             }
         } else if (cmd == Command.DROP_PIXELS) {
             switch (this.step) {
                 case 0:
                     // turn arm
+                    linear_part.startStep(LinearPart.Command.MOVE_DROP_POSITION);
+                    pincer_part.startStep(PincerPart.Command.MOVE_DROP_POSITION);
                     break;
                 case 1:
                     // move to board
@@ -117,9 +120,10 @@ public class AutoOpMode extends LinearOpMode {
                     break;
                 case 3:
                     // drop pixels
+                    pincer_part.startStep(PincerPart.Command.DROP_PIXEL_RIGHT);
                     break;
                 case 4:
-                    startStep(Command.PARK);
+                    this.startStep(Command.PARK);
                     break;
             }
         } else if (cmd == Command.PARK) {
@@ -129,6 +133,8 @@ public class AutoOpMode extends LinearOpMode {
                     break;
                 case 1:
                     // rotate arm
+                    pincer_part.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
+                    linear_part.startStep(LinearPart.Command.RESET);
                     break;
                 case 2:
                     // park;
