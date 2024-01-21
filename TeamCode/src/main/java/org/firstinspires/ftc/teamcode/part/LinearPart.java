@@ -10,9 +10,10 @@ import org.firstinspires.ftc.teamcode.hardware.MagSensorHW;
 public class LinearPart extends Part {
     DcMotorHW linear1, linear2;
     MagSensorHW mag;
-    public boolean expand = true;
-    public double linear_speed_go_down = 0.5;
-    public double linear_speed_go_up = 0.7;
+    private boolean expand = true;
+    private final double linear_speed_go_down = 0.5;
+    private final double linear_speed_go_up = 0.7;
+    private boolean correcting_limit = false;
 
     public int dropPosition = 1000;
 
@@ -96,8 +97,7 @@ public class LinearPart extends Part {
             switch (this.step) {
                 case 0:
                     expand = false;
-                    moveLinearWithTargetTicks(linear_speed_go_down,
-                            (int)(this.getLength()));
+                    moveLinear(linear_speed_go_down);
                     break;
                 case 1:
                     this.finishStep();
@@ -121,10 +121,18 @@ public class LinearPart extends Part {
     public void update(){
         super.update();
         if (mag.isActivated()) {
+            expand = true;
+            moveLinear(0.3);
+            linear1.accumulated_moving_distance = 0.0;
+            linear2.accumulated_moving_distance = 0.0;
+            this.correcting_limit = true;
+        }
+        else if (this.correcting_limit) {
             linear1.stop();
             linear2.stop();
             linear1.accumulated_moving_distance = 0.0;
             linear2.accumulated_moving_distance = 0.0;
+            this.correcting_limit = false;
         }
     }
 }
