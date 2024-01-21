@@ -30,6 +30,10 @@ public class LinearPart extends Part {
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
     }
 
+    public double getLength() {
+        return (linear1.getAccumulatedMovingDistance() + linear2.getAccumulatedMovingDistance()) * 0.5;
+    }
+
     public void moveLinear(double magnitude) {
         linear1.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         linear2.setDirection(expand ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
@@ -87,7 +91,7 @@ public class LinearPart extends Part {
                 case 0:
                     expand = false;
                     moveLinearWithTargetTicks(linear_speed_go_down,
-                            (int)((this.linear1.getAccumulatedMovingDistance() + this.linear2.getAccumulatedMovingDistance()) * 0.5));
+                            (int)(this.getLength()));
                     break;
                 case 1:
                     this.finishStep();

@@ -8,15 +8,15 @@ import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class PincerPart extends Part {
     ServoHW finger1, finger2, arm1, arm2, wrist;
-    public double fingerClosePosition = 0.36;
-    public double fingerOpenPosition = 0.5;
+    private final double fingerClosePosition = 0.36;
+    private final double fingerOpenPosition = 0.5;
 
 
-    public double wristDropPosition = 1.0;
-    public double wristGrabPosition = 0.505;
+    private final double wristDropPosition = 1.0;
+    private final double wristGrabPosition = 0.505;
 
-    public double armGrabPosition = 0.685;
-    public double armDropPosition = 0;
+    private final double armGrabPosition = 0.685;
+    private final double armDropPosition = 0;
 
     public boolean is_left_opend = true;
     public boolean is_right_opend = true;

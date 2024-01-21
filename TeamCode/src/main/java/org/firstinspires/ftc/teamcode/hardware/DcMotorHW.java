@@ -28,7 +28,7 @@ public class DcMotorHW extends Hardware {
     }
 
     public void initEncoder() {
-        this.accumulated_moving_distance += this.motor.getCurrentPosition();
+        this.accumulated_moving_distance += this.motor.getCurrentPosition() * (this.motor.getDirection() == DcMotor.Direction.FORWARD ? 1.0 : -1.0);
         DcMotor.RunMode mode = this.motor.getMode();
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(mode);

@@ -6,12 +6,23 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
+import org.firstinspires.ftc.teamcode.hardware.DistSensorHW;
 import org.firstinspires.ftc.teamcode.hardware.IMUHW;
 import org.firstinspires.ftc.teamcode.mainop.AutoOpMode;
 
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
     DcMotorHW wheelFR, wheelFL, wheelBR, wheelBL;
+    DistSensorHW backboard_dist_sensor;
+
+    private final double length_of_robot = 28.0;
+    private final double length_of_pincer = 28.0;
+    private final double height_of_wheel = 8.0;
+    private final double angle_of_backboard = 62.0;
+    private final double angle_of_linear = 53.0;
+
+    private double backboard_dist = 0.0;
+
     public IMUHW imuhw;
     public enum Command implements RobotCommand {
         MOVE_FORWARD,
@@ -66,6 +77,8 @@ public class WheelPart extends Part {
         this.wheelBR = new DcMotorHW("wheelBR", hwm, tel);
         this.wheelBL = new DcMotorHW("wheelBL", hwm, tel);
 
+        this.backboard_dist_sensor = new DistSensorHW("backboard", hwm, tel);
+
         this.imuhw = new IMUHW("imu", hwm, tel);
 
         wheelFR.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.FORWARD);
@@ -75,6 +88,7 @@ public class WheelPart extends Part {
 
         this.hardware_manager.registerHardware(this.wheelFR).registerHardware(this.wheelFL);
         this.hardware_manager.registerHardware(this.wheelBR).registerHardware(this.wheelBL);
+        this.hardware_manager.registerHardware(this.backboard_dist_sensor);
         this.hardware_manager.registerHardware(this.imuhw);
     }
 
@@ -84,7 +98,6 @@ public class WheelPart extends Part {
         wheelBR.stop();
         wheelBL.stop();
     }
-
 
     public void move(double speed, Direction dir){
         this.wheelFL.move(speed * dir.get_value().front_left);
@@ -143,6 +156,20 @@ public class WheelPart extends Part {
         this.wheelFR.move(this.wheelSpeedFast * frlb_factor);
         this.wheelBL.move(this.wheelSpeedFast * frlb_factor);
         this.wheelBR.move(this.wheelSpeedFast * flbr_factor);
+    }
+
+    public void update(double linear_length) {
+        super.update();
+        double D2 = this.length_of_pincer;
+        double D3 = this.length_of_robot;
+        double d2 = linear_length * Math.cos(Math.toRadians(this.angle_of_linear));
+        double d1 = (linear_length * Math.sin(Math.toRadians(this.angle_of_linear)) + this.height_of_wheel)
+                / Math.tan(Math.toRadians(this.angle_of_backboard));
+        this.backboard_dist = D2+D3+d2-d1;
+        double cur_dist = this.backboard_dist_sensor.getDistance();
+
+        this.telemetry.addData("Idl Dist = ", this.backboard_dist);
+        this.telemetry.addData("Cur Dist = ", cur_dist);
     }
 
     @Override

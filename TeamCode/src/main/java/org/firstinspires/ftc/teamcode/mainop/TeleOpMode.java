@@ -33,7 +33,8 @@ public class TeleOpMode extends OpMode {
         // Update the parts
         this.linear_part.update();
         this.pincer_part.update();
-        this.wheel_part.update();
+        this.telemetry.addData("Linear Length = ", this.linear_part.getLength());
+        this.wheel_part.update(this.linear_part.getLength());
 
         if (this.is_emergency_mode) {
             this.processGamepad1WhenEmergency();

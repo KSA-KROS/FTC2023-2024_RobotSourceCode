@@ -25,7 +25,6 @@ public boolean isObjectDetected() {
 }
     @Override
     public void update() {
-
     }
     @Override
     public boolean isFinished() {
