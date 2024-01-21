@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
+import org.firstinspires.ftc.teamcode.hardware.MagSensorHW;
 
 public class LinearPart extends Part {
     DcMotorHW linear1, linear2;
+    MagSensorHW mag;
     public boolean expand = true;
     public double linear_speed_go_down = 0.5;
     public double linear_speed_go_up = 0.7;
@@ -25,6 +27,7 @@ public class LinearPart extends Part {
 
         this.linear1 = new DcMotorHW("linear1", hwm, tel);
         this.linear2 = new DcMotorHW("linear2", hwm, tel);
+        this.mag = new MagSensorHW("mag", hwm, tel);
 
         linear1.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
@@ -97,6 +100,17 @@ public class LinearPart extends Part {
                     this.finishStep();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void update(){
+        super.update();
+        if (mag.isActivated()) {
+            linear1.stop();
+            linear2.stop();
+            linear1.accumulated_moving_distance = 0.0;
+            linear2.accumulated_moving_distance = 0.0;
         }
     }
 }
