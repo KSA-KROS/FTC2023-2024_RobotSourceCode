@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 import org.firstinspires.ftc.teamcode.hardware.IMUHW;
+import org.firstinspires.ftc.teamcode.mainop.AutoOpMode;
 
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
@@ -23,7 +24,8 @@ public class WheelPart extends Part {
         VIEW_LEFT,
         VIEW_FORWARD,
         VIEW_BACKWARD,
-        STOP
+        STOP,
+        MOVE_DETECT_POS
     }
 
     public enum Direction {
@@ -110,6 +112,14 @@ public class WheelPart extends Part {
             }
             move(speed, dir);
         }
+    }
+
+    public void move(double speed, Direction dir, int ticks) {
+        this.wheelFL.move(speed * dir.get_value().front_left, ticks);
+        this.wheelFR.move(speed * dir.get_value().front_right, ticks);
+        this.wheelBL.move(speed * dir.get_value().back_left, ticks);
+        this.wheelBR.move(speed * dir.get_value().back_right, ticks);
+
     }
 
     public void moveFreely(double x, double y) {
@@ -210,6 +220,15 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, 180.0);
+                    this.finishStep();
+                    break;
+            }
+        }
+
+        else if (cmd == WheelPart.Command.MOVE_DETECT_POS) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, Direction.Forward, AutoOpMode.detectPosLength);
                     this.finishStep();
                     break;
             }
