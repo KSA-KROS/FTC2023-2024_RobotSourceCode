@@ -54,7 +54,8 @@ public class WheelPart extends Part {
         }
     }
 
-    public double wheelSpeed = 0.5;
+    public double wheelSpeed = 0.6;
+    public double wheelSpeedFast = 1.0;
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
 
@@ -126,12 +127,12 @@ public class WheelPart extends Part {
         this.wheelFL.setUsingBrake(false);
         this.wheelFR.setUsingBrake(false);
 
-        double rfbl_factor = (x * -Math.sqrt(0.5) + y * Math.sqrt(0.5)) / (x * x + y * y);
-        double lfbr_factor = (x * Math.sqrt(0.5) + y * Math.sqrt(0.5)) / (x * x + y * y);
-        this.wheelFL.move(this.wheelSpeed * lfbr_factor);
-        this.wheelFR.move(this.wheelSpeed * rfbl_factor);
-        this.wheelBL.move(this.wheelSpeed * rfbl_factor);
-        this.wheelBR.move(this.wheelSpeed * lfbr_factor);
+        double frlb_factor = (-x * Math.sqrt(0.5) + -y * Math.sqrt(0.5)) / (x * x + y * y);
+        double flbr_factor = (x * Math.sqrt(0.5) + -y * Math.sqrt(0.5)) / (x * x + y * y);
+        this.wheelFL.move(this.wheelSpeedFast * flbr_factor);
+        this.wheelFR.move(this.wheelSpeedFast * frlb_factor);
+        this.wheelBL.move(this.wheelSpeedFast * frlb_factor);
+        this.wheelBR.move(this.wheelSpeedFast * flbr_factor);
     }
 
     @Override

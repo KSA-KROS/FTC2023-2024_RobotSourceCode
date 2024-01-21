@@ -8,14 +8,14 @@ import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class PincerPart extends Part {
     ServoHW finger1, finger2, arm1, arm2, wrist;
-    public double fingerClosePosition = 0.35;
+    public double fingerClosePosition = 0.36;
     public double fingerOpenPosition = 0.5;
 
 
     public double wristDropPosition = 1.0;
-    public double wristGrabPosition = 0.51;
+    public double wristGrabPosition = 0.505;
 
-    public double armGrabPosition = 0.68;
+    public double armGrabPosition = 0.685;
     public double armDropPosition = 0;
 
     public boolean is_left_opend = true;
@@ -51,10 +51,10 @@ public class PincerPart extends Part {
         finger1.setInitialPosition(fingerOpenPosition);
         finger2.setInitialPosition(fingerOpenPosition);
         wrist.setInitialPosition(wristGrabPosition);
-        arm1.moveWithInterval(armGrabPosition, 2000, 100);
-        arm2.moveWithInterval(armGrabPosition, 2000, 100);
-        //arm1.setInitialPosition(0.5);
-        //arm2.setInitialPosition(0.5);
+        //arm1.moveWithInterval(armGrabPosition, 500, 0);
+        //arm2.moveWithInterval(armGrabPosition, 500, 0);
+        arm1.setInitialPosition(armGrabPosition);
+        arm2.setInitialPosition(armGrabPosition);
 
         this.hardware_manager.registerHardware(this.finger1).registerHardware(this.finger2);
         this.hardware_manager.registerHardware(this.wrist);

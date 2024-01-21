@@ -70,9 +70,9 @@ public class TeleOpMode extends OpMode {
         } else if (gamepad1.circle) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
-            this.wheel_part.startStep(WheelPart.Command.STOP);
+            telemetry.addLine("WTF");
+            this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
         }
-        this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
     }
 
     private void processGamepad2() {
@@ -107,16 +107,17 @@ public class TeleOpMode extends OpMode {
 
     private void emergencyOnOFF() {
         if (this.is_emergency_mode) {
-            if (gamepad1.right_stick_button && gamepad1.left_stick_button
-                    && gamepad2.right_stick_button && gamepad2.left_stick_button) {
+            if (gamepad1.touchpad && gamepad2.touchpad) {
                 // NORMAL STATE
                 this.is_emergency_mode = false;
                 this.gamepad1.rumble(100);
                 this.gamepad2.rumble(100);
             }
         } else {
-            if (gamepad1.right_stick_button || gamepad1.left_stick_button
-                    || gamepad2.right_stick_button || gamepad2.left_stick_button) {
+            if ((gamepad1.right_bumper && gamepad1.right_trigger > 0.5
+                    && gamepad1.left_bumper && gamepad1.left_trigger > 0.5)
+                    ||(gamepad2.right_bumper && gamepad2.right_trigger > 0.5
+                    && gamepad2.left_bumper && gamepad2.left_trigger > 0.5)) {
                 // EMERGENCY STATE
                 this.is_emergency_mode = true;
                 this.pincer_part.emergencyStop();

@@ -21,7 +21,7 @@ public abstract class Part {
     protected int step = -1;
 
     private long delay_time = 0;
-    private boolean finish = false;
+    private boolean finish = true;
 
     protected void delayTime(long delay) {
         delay_time = System.currentTimeMillis() + delay;
