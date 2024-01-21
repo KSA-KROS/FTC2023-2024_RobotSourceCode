@@ -16,7 +16,10 @@ public class TeleOpMode extends OpMode {
     private WheelPart wheel_part;
     private DdalggakPart ddalggak_part;
 
-    boolean is_emergency_mode = false;
+    private boolean is_emergency_mode = false;
+
+    private String prev_gamepad1_state = "";
+    private String prev_gamepad2_state = "";
 
     @Override
     public void init() {
@@ -53,6 +56,11 @@ public class TeleOpMode extends OpMode {
     }
 
     private void processGamepad1() {
+        // For optimization : do not process (start commands) if the gamepad1 state is not changed
+        String gamepad1_state = gamepad1.toString();
+        if (gamepad1_state.equals(this.prev_gamepad1_state)) return;
+        this.prev_gamepad1_state = gamepad1_state;
+
         if (gamepad1.dpad_up) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
         } else if (gamepad1.dpad_down) {
@@ -84,6 +92,11 @@ public class TeleOpMode extends OpMode {
     }
 
     private void processGamepad2() {
+        // For optimization : do not process (start commands) if the gamepad2 state is not changed
+        String gamepad2_state = gamepad1.toString();
+        if (gamepad2_state.equals(this.prev_gamepad2_state)) return;
+        this.prev_gamepad2_state = gamepad2_state;
+
         // Linear Up and Down
         if (gamepad2.dpad_up) {
             this.linear_part.startStep(LinearPart.Command.MOVE_UP);
