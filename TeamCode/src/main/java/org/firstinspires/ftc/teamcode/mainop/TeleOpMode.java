@@ -39,8 +39,6 @@ public class TeleOpMode extends OpMode {
         this.wheel_part.update(this.linear_part.getLength());
         //this.ddalggak_part.update();
 
-        this.telemetry.addData("Linear Length = ", this.linear_part.getLength());
-
         if (this.is_emergency_mode) {
             this.processGamepad1WhenEmergency();
             this.processGamepad2WhenEmergency();
@@ -51,7 +49,7 @@ public class TeleOpMode extends OpMode {
 
         this.emergencyOnOFF();
 
-        this.telemetry.update();
+        //this.telemetry.update();
     }
 
     private void processGamepad1() {

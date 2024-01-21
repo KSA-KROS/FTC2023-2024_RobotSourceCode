@@ -71,7 +71,7 @@ public class PincerPart extends Part {
             switch (this.step){
                 case 0:
                     this.is_left_opend = false;
-                    this.finger1.moveDirectly(fingerClosePosition, 0);
+                    this.finger1.moveDirectly(fingerClosePosition);
                     this.finishStep();
                     break;
             }
@@ -80,7 +80,7 @@ public class PincerPart extends Part {
             switch (this.step){
                 case 0:
                     this.is_right_opend = false;
-                    this.finger2.moveDirectly(fingerClosePosition, 0);
+                    this.finger2.moveDirectly(fingerClosePosition);
                     this.finishStep();
                     break;            }
         }
@@ -88,7 +88,7 @@ public class PincerPart extends Part {
             switch (this.step){
                 case 0:
                     this.is_left_opend = true;
-                    this.finger1.moveDirectly(fingerOpenPosition, 0);
+                    this.finger1.moveDirectly(fingerOpenPosition);
                     this.finishStep();
                     break;
             }
@@ -97,7 +97,7 @@ public class PincerPart extends Part {
             switch (this.step){
                 case 0:
                     this.is_right_opend = true;
-                    this.finger2.moveDirectly(fingerOpenPosition, 0);
+                    this.finger2.moveDirectly(fingerOpenPosition);
                     this.finishStep();
                     break;
             }
@@ -105,11 +105,11 @@ public class PincerPart extends Part {
         else if (cmd == Command.MOVE_DROP_POSITION) {
             switch (this.step){
                 case 0:
-                    this.arm1.moveWithInterval(armDropPosition, 2000, 0);
-                    this.arm2.moveWithInterval(armDropPosition, 2000, 0);
+                    this.arm1.moveWithInterval(armDropPosition, 2000);
+                    this.arm2.moveWithInterval(armDropPosition, 2000);
                     break;
                 case 1:
-                    this.wrist.moveDirectly(wristDropPosition, 0);
+                    this.wrist.moveDirectly(wristDropPosition);
                     break;
                 case 2:
                     this.finishStep();
@@ -119,11 +119,11 @@ public class PincerPart extends Part {
         else if (cmd == Command.MOVE_GRAB_POSITION) {
             switch (this.step){
                 case 0:
-                    this.wrist.moveDirectly(wristGrabPosition, 0);
+                    this.wrist.moveDirectly(wristGrabPosition);
                     break;
                 case 1:
-                    this.arm1.moveWithInterval(armGrabPosition, 2000, 0);
-                    this.arm2.moveWithInterval(armGrabPosition, 2000, 0);
+                    this.arm1.moveWithInterval(armGrabPosition, 2000);
+                    this.arm2.moveWithInterval(armGrabPosition, 2000);
                     break;
                 case 2:
                     this.finishStep();

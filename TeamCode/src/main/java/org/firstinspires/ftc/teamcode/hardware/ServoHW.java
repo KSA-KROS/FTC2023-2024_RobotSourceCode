@@ -12,7 +12,6 @@ public class ServoHW extends Hardware {
     private double target_value = 0.0;
     private double begin_value = 0.0;
     private long command_begin_time = 0;
-    private long action_end_time = 0;
     private long command_end_time = 0;
 
     // ==================== Initialization ====================
@@ -40,27 +39,24 @@ public class ServoHW extends Hardware {
 
     // ==================== Ordering Commands ====================
     // Move the motor with the given power
-    public void moveDirectly(double position, long interval) {
+    public void moveDirectly(double position) {
         this.target_value = position;
         this.begin_value = this.servo.getPosition();
         this.command_begin_time = System.currentTimeMillis();
-        this.action_end_time = this.command_begin_time;
-        this.command_end_time = this.command_begin_time + interval;
+        this.command_end_time = this.command_begin_time;
     }
     // Move the motor with the given power and the given ticks
-    public void moveWithInterval(double position, long action_time_interval, long resting_time_interval) {
+    public void moveWithInterval(double position, long time_interval) {
         this.target_value = position;
         this.begin_value = this.servo.getPosition();
         this.command_begin_time = System.currentTimeMillis();
-        this.action_end_time = this.command_begin_time + action_time_interval;
-        this.command_end_time = this.action_end_time + resting_time_interval;
+        this.command_end_time = this.command_begin_time + time_interval;
     }
     // Stop the servo
     public void stop() {
         this.target_value = this.servo.getPosition();
         this.begin_value = this.target_value;
         this.command_begin_time = 0;
-        this.action_end_time = 0;
         this.command_end_time = 0;
         this.servo.setPosition(this.target_value);
     }
@@ -68,13 +64,11 @@ public class ServoHW extends Hardware {
     @Override
     public void update() {
         if (!this.isFinished()) {
-            if (this.command_end_time < System.currentTimeMillis()) { // When command is ended (action + resting)
+            if (this.command_end_time <= System.currentTimeMillis()) { // When the action is ended
                 this.servo.setPosition(this.target_value);
                 this.command_end_time = 0;
-            } else if (this.action_end_time < System.currentTimeMillis()) { // When the action is ended
-                this.servo.setPosition(this.target_value);
             } else {
-                double progress = (System.currentTimeMillis() - this.command_begin_time) / (double) (this.action_end_time - this.command_begin_time);
+                double progress = (System.currentTimeMillis() - this.command_begin_time) / (double) (this.command_end_time - this.command_begin_time);
                 if (progress > 1.0) progress = 1.0;
                 if (!(progress >= 0.0)) progress = 0.0;
                 telemetry.addData("Degree", this.begin_value + (this.target_value - this.begin_value) * progress);

@@ -28,14 +28,10 @@ public class AutoOpMode extends LinearOpMode {
     protected int step = 0;
     private boolean finish = true;
     private long delay_time = 0;
-    public boolean run = false;
+    private boolean run = false;
 
-    public boolean isDone = false;
+    public final static int detectPosLength = 1000;
 
-
-
-
-    public static int detectPosLength = 1000;
     @Override
     public void runOpMode() throws InterruptedException {
         // init
@@ -46,15 +42,25 @@ public class AutoOpMode extends LinearOpMode {
         // start
         startStep(Command.DETECT_PIXELS);
 
+        // Command Procedure
+        Command[] command_procedure = {
+                /* 1. */ Command.DETECT_PIXELS,
+                /* 2. */ Command.DROP_PIXELS,
+                /* 3. */ Command.PARK
+        };
+        int procedure_step = 0;
+
         // loop
         run = true;
         while (run) {
             this.linear_part.update();
             this.pincer_part.update();
             this.wheel_part.update();
+            this.update();
 
-            if (!isDone) {
-                nextStep();
+            if (this.isFinished()) {
+                this.startStep(command_procedure[procedure_step++]);
+                if (procedure_step >= command_procedure.length) run = false;
             }
         }
     }
@@ -63,7 +69,6 @@ public class AutoOpMode extends LinearOpMode {
         DETECT_PIXELS,
         DROP_PIXELS,
         PARK
-
     }
 
     // Begin the specific step
@@ -102,7 +107,7 @@ public class AutoOpMode extends LinearOpMode {
                     wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
                     break;
                 case 3:
-                    this.startStep(Command.DROP_PIXELS);
+                    this.finishCommand();
                     break;
             }
         } else if (cmd == Command.DROP_PIXELS) {
@@ -123,7 +128,7 @@ public class AutoOpMode extends LinearOpMode {
                     pincer_part.startStep(PincerPart.Command.DROP_PIXEL_RIGHT);
                     break;
                 case 4:
-                    this.startStep(Command.PARK);
+                    this.finishCommand();
                     break;
             }
         } else if (cmd == Command.PARK) {
@@ -139,12 +144,15 @@ public class AutoOpMode extends LinearOpMode {
                     // park;
                     break;
                 case 3:
-                    this.isDone = true;
+                    this.finishCommand();
                     break;
             }
         }
     }
 
+    protected void delayTime(long delay) {
+        delay_time = System.currentTimeMillis() + delay;
+    }
 
     // Change to the next step
     private void changeToTheNextStep() {
@@ -154,21 +162,18 @@ public class AutoOpMode extends LinearOpMode {
 
     // Update the hardware objects of the part and check the step was finished
     public void update(){
-        hardware_manager.update();
-        if(hardware_manager.isFinished() && System.currentTimeMillis() > this.delay_time){
+        if(this.linear_part.isFinished() && this.pincer_part.isFinished()
+                && this.wheel_part.isFinished() && System.currentTimeMillis() > this.delay_time) {
             this.changeToTheNextStep();
         }
     }
 
     // Check that the assigned command is finished
-    public boolean isFinished(){
+    private boolean isFinished(){
         return this.finish;
     }
 
-
-
-
-
+    private void finishCommand() { this.finish = true; }
 }
 
 
