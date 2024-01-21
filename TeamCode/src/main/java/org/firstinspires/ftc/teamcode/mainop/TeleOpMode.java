@@ -108,18 +108,11 @@ public class TeleOpMode extends OpMode {
 
         // Pincer Grab and Drop
         if (gamepad2.left_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_PIXEL_LEFT);
+            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
         }
         if (gamepad2.right_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_PIXEL_RIGHT);
+            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
         }
-        if (gamepad2.left_trigger > 0.5) {
-            this.pincer_part.startStep(PincerPart.Command.DROP_PIXEL_LEFT);
-        }
-        if (gamepad2.right_trigger > 0.5) {
-            this.pincer_part.startStep(PincerPart.Command.DROP_PIXEL_RIGHT);
-        }
-
 
         // Rotate the pincer
         if (gamepad2.triangle) {
