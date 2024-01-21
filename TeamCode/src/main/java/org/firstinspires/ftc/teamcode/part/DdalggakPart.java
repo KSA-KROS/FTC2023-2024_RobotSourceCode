@@ -8,8 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 
 public class DdalggakPart extends Part {
     DcMotorHW ddalggak1, ddalggak2;
-    public int open_encoder_value = 1000;
-    public int close_encoder_value = 0;
+    public int encoder_value = 100;
 
     public enum Command implements RobotCommand {
         OPEN_DDALGGAK,
@@ -27,8 +26,17 @@ public class DdalggakPart extends Part {
         ddalggak1.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
         ddalggak2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
 
+        this.hardware_manager.registerHardware(ddalggak1).registerHardware(ddalggak2);
+    }
+
+    private void setCloseDirection() {
         ddalggak1.setDirection(DcMotorSimple.Direction.FORWARD);
         ddalggak2.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    private void setOpenDirection() {
+        ddalggak1.setDirection(DcMotorSimple.Direction.REVERSE);
+        ddalggak2.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     @Override
@@ -37,10 +45,10 @@ public class DdalggakPart extends Part {
         if (this.current_command == Command.OPEN_DDALGGAK) {
             switch (this.step) {
                 case 0 :
-                    ddalggak1.move(1.0, open_encoder_value);
-                    ddalggak2.move(1.0, open_encoder_value);
-                    break;
-                case 1 :
+                    this.setOpenDirection();
+                    ddalggak1.move(0.5, encoder_value);
+                    ddalggak2.move(0.5, encoder_value);
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -48,8 +56,9 @@ public class DdalggakPart extends Part {
         else if (this.current_command == Command.CLOSE_DDALGGAK) {
             switch (this.step) {
                 case 0 :
-                    ddalggak1.move(1.0, close_encoder_value);
-                    ddalggak2.move(1.0, close_encoder_value);
+                    this.setCloseDirection();
+                    ddalggak1.move(0.5, encoder_value);
+                    ddalggak2.move(0.5, encoder_value);
                     break;
                 case 1 :
                     this.finishStep();
@@ -59,12 +68,14 @@ public class DdalggakPart extends Part {
         else if (this.current_command == Command.DDALGGAK_ACTION) {
             switch (this.step) {
                 case 0 :
-                    ddalggak1.move(1.0, close_encoder_value);
-                    ddalggak2.move(1.0, close_encoder_value);
+                    this.setCloseDirection();
+                    ddalggak1.move(0.5, encoder_value);
+                    ddalggak2.move(0.5, encoder_value);
                     break;
                 case 1 :
-                    ddalggak1.move(1.0, open_encoder_value);
-                    ddalggak2.move(1.0, open_encoder_value);
+                    this.setOpenDirection();
+                    ddalggak1.move(0.5, encoder_value);
+                    ddalggak2.move(0.5, encoder_value);
                     break;
                 case 2 :
                     this.finishStep();

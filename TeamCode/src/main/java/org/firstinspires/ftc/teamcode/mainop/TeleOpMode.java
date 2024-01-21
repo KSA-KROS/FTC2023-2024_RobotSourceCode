@@ -76,7 +76,6 @@ public class TeleOpMode extends OpMode {
         } else if (gamepad1.circle) {
             this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
-            telemetry.addLine("WTF");
             this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
         }
     }
@@ -106,6 +105,7 @@ public class TeleOpMode extends OpMode {
 
         // Ddalggak
         if (gamepad2.circle) {
+            this.telemetry.addLine("AAA");
             this.ddalggak_part.startStep(DdalggakPart.Command.DDALGGAK_ACTION);
         }
 
