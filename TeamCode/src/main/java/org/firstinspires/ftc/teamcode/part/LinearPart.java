@@ -11,8 +11,8 @@ public class LinearPart extends Part {
     DcMotorHW linear1, linear2;
     MagSensorHW mag;
     private boolean expand = true;
-    private final double linear_speed_go_down = 0.5;
-    private final double linear_speed_go_up = 0.7;
+    private final double linear_speed_go_down = 0.4;
+    private final double linear_speed_go_up = 0.6;
     private boolean correcting_limit = false;
 
     public int dropPosition = 1000;
@@ -21,7 +21,6 @@ public class LinearPart extends Part {
         MOVE_UP,
         MOVE_DOWN,
         STOP,
-        RESET,
         MOVE_DROP_POSITION
     }
 
@@ -33,12 +32,16 @@ public class LinearPart extends Part {
         this.linear2 = new DcMotorHW("linear2", hwm, tel);
         this.mag = new MagSensorHW("mag", hwm, tel);
 
+        this.mag.notUse();
+
         linear1.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
+
+        this.hardware_manager.registerHardware(linear1).registerHardware(linear2).registerHardware(mag);
     }
 
     public double getLength() {
-        return (linear1.getAccumulatedMovingDistance() + linear2.getAccumulatedMovingDistance()) * 0.5;
+        return (linear1.getAccumulatedMovingDistance() + linear2.getAccumulatedMovingDistance()) * 0.5 / 43.0;
     }
 
     public void moveLinear(double magnitude) {
@@ -87,17 +90,6 @@ public class LinearPart extends Part {
                 case 0:
                     linear1.stop();
                     linear2.stop();
-                    break;
-                case 1:
-                    this.finishStep();
-                    break;
-            }
-        }
-        else if (cmd == Command.RESET) {
-            switch (this.step) {
-                case 0:
-                    expand = false;
-                    moveLinear(linear_speed_go_down);
                     break;
                 case 1:
                     this.finishStep();

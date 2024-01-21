@@ -70,6 +70,10 @@ public class DcMotorHW extends Hardware {
         return Math.abs(this.accumulated_moving_distance);
     }
 
+    public double getCurrentTick() {
+        return this.motor.getCurrentPosition();
+    }
+
     // ==================== Ordering Commands ====================
     // Move the motor with the given power : moving infinitely
     public void move(double power) {
@@ -155,4 +159,5 @@ public class DcMotorHW extends Hardware {
     public void emergencyStop() {
         this.stop();
     }
+
 }

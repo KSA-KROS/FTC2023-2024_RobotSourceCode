@@ -12,8 +12,8 @@ public class PincerPart extends Part {
     private final double fingerOpenPosition = 0.5;
 
 
-    private final double wristDropPosition = 1.0;
-    private final double wristGrabPosition = 0.505;
+    private final double wristDropPosition = 0.87;
+    private final double wristGrabPosition = 0.5;
 
     private final double armGrabPosition = 0.685;
     private final double armDropPosition = 0;
@@ -72,7 +72,6 @@ public class PincerPart extends Part {
                 case 0:
                     this.is_left_opend = false;
                     this.finger1.moveDirectly(fingerClosePosition, 0);
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -83,20 +82,13 @@ public class PincerPart extends Part {
                     this.is_right_opend = false;
                     this.finger2.moveDirectly(fingerClosePosition, 0);
                     this.finishStep();
-                    break;
-                case 1:
-                    this.finishStep();
-                    break;
-            }
+                    break;            }
         }
         else if (cmd == Command.DROP_PIXEL_LEFT) {
             switch (this.step){
                 case 0:
                     this.is_left_opend = true;
                     this.finger1.moveDirectly(fingerOpenPosition, 0);
-                    this.finishStep();
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }
@@ -106,9 +98,6 @@ public class PincerPart extends Part {
                 case 0:
                     this.is_right_opend = true;
                     this.finger2.moveDirectly(fingerOpenPosition, 0);
-                    this.finishStep();
-                    break;
-                case 1:
                     this.finishStep();
                     break;
             }

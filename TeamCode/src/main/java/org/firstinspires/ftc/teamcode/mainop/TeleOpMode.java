@@ -28,7 +28,7 @@ public class TeleOpMode extends OpMode {
 
     @Override
     public void start() {
-        this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
+        //this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TeleOpMode extends OpMode {
         this.linear_part.update();
         this.pincer_part.update();
         this.wheel_part.update(this.linear_part.getLength());
-        this.ddalggak_part.update();
+        //this.ddalggak_part.update();
 
         this.telemetry.addData("Linear Length = ", this.linear_part.getLength());
 
@@ -68,14 +68,19 @@ public class TeleOpMode extends OpMode {
         } else if (gamepad1.right_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_RIGHT);
         } else if (gamepad1.triangle) {
-            this.wheel_part.startStep(WheelPart.Command.VIEW_FORWARD);
+            this.wheel_part.onAutoDistance();
+            //this.wheel_part.startStep(WheelPart.Command.VIEW_FORWARD);
         } else if (gamepad1.cross) {
-            this.wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
+            this.wheel_part.onAutoDistance();
+            //this.wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
         } else if (gamepad1.square) {
-            this.wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
+            this.wheel_part.onAutoDistance();
+            //this.wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
         } else if (gamepad1.circle) {
-            this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
+            this.wheel_part.onAutoDistance();
+            //this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
+            this.wheel_part.onAutoDistance();
             this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
         }
     }
@@ -92,11 +97,18 @@ public class TeleOpMode extends OpMode {
 
         // Pincer Grab and Drop
         if (gamepad2.left_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
+            this.pincer_part.startStep(PincerPart.Command.GRAB_PIXEL_LEFT);
         }
         if (gamepad2.right_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_RIGHT);
+            this.pincer_part.startStep(PincerPart.Command.GRAB_PIXEL_RIGHT);
         }
+        if (gamepad2.left_trigger > 0.5) {
+            this.pincer_part.startStep(PincerPart.Command.DROP_PIXEL_LEFT);
+        }
+        if (gamepad2.right_trigger > 0.5) {
+            this.pincer_part.startStep(PincerPart.Command.DROP_PIXEL_RIGHT);
+        }
+
 
         // Rotate the pincer
         if (gamepad2.triangle) {
@@ -105,14 +117,15 @@ public class TeleOpMode extends OpMode {
 
         // Ddalggak
         if (gamepad2.circle) {
-            this.telemetry.addLine("AAA");
-            this.ddalggak_part.startStep(DdalggakPart.Command.DDALGGAK_ACTION);
+            this.ddalggak_part.startStep(DdalggakPart.Command.CLOSE_DDALGGAK);
+        }
+        if (gamepad2.square) {
+            this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
         }
 
         // Reset
         if (gamepad2.cross) {
             this.pincer_part.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
-            this.linear_part.startStep(LinearPart.Command.RESET);
         }
     }
 

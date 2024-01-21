@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.mainop.AutoOpMode;
 
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
-    DcMotorHW wheelFR, wheelFL, wheelBR, wheelBL;
+    public DcMotorHW wheelFR, wheelFL, wheelBR, wheelBL;
     DistSensorHW backboard_dist_sensor;
 
     private final double length_of_robot = 28.0;
@@ -22,6 +22,7 @@ public class WheelPart extends Part {
     private final double angle_of_linear = 53.0;
 
     private double backboard_dist = 0.0;
+    private boolean use_auto = false;
 
     public IMUHW imuhw;
     public enum Command implements RobotCommand {
@@ -67,7 +68,7 @@ public class WheelPart extends Part {
         }
     }
 
-    public double wheelSpeed = 0.6;
+    public double wheelSpeed = 0.4;
     public double wheelSpeedFast = 1.0;
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
@@ -136,26 +137,20 @@ public class WheelPart extends Part {
     }
 
     public void moveFreely(double x, double y) {
-        if (x == 0 && y == 0) {
-            this.wheelBL.setUsingBrake(true);
-            this.wheelBR.setUsingBrake(true);
-            this.wheelFL.setUsingBrake(true);
-            this.wheelFR.setUsingBrake(true);
-            this.stop();
-            return;
-        }
-
-        this.wheelBL.setUsingBrake(false);
-        this.wheelBR.setUsingBrake(false);
-        this.wheelFL.setUsingBrake(false);
-        this.wheelFR.setUsingBrake(false);
-
-        double frlb_factor = (-x * Math.sqrt(0.5) + -y * Math.sqrt(0.5)) / (x * x + y * y);
-        double flbr_factor = (x * Math.sqrt(0.5) + -y * Math.sqrt(0.5)) / (x * x + y * y);
+        double frlb_factor = (-x * Math.sqrt(0.5) + -y * Math.sqrt(0.5));
+        double flbr_factor = (x * Math.sqrt(0.5) + -y * Math.sqrt(0.5));
         this.wheelFL.move(this.wheelSpeedFast * flbr_factor);
         this.wheelFR.move(this.wheelSpeedFast * frlb_factor);
         this.wheelBL.move(this.wheelSpeedFast * frlb_factor);
         this.wheelBR.move(this.wheelSpeedFast * flbr_factor);
+    }
+
+    public void onAutoDistance() {
+        this.use_auto = true;
+    }
+
+    public void offAutoDistance() {
+        this.use_auto = false;
     }
 
     public void update(double linear_length) {
@@ -165,11 +160,27 @@ public class WheelPart extends Part {
         double d2 = linear_length * Math.cos(Math.toRadians(this.angle_of_linear));
         double d1 = (linear_length * Math.sin(Math.toRadians(this.angle_of_linear)) + this.height_of_wheel)
                 / Math.tan(Math.toRadians(this.angle_of_backboard));
-        this.backboard_dist = D2+D3+d2-d1;
+        this.backboard_dist = D2-D3+d2-d1;
         double cur_dist = this.backboard_dist_sensor.getDistance();
 
         this.telemetry.addData("Idl Dist = ", this.backboard_dist);
         this.telemetry.addData("Cur Dist = ", cur_dist);
+
+        if (this.use_auto && this.backboard_dist > 2.0){
+            double range = 0.5;
+            if (this.backboard_dist > cur_dist + range) {
+                double f = this.backboard_dist - (cur_dist + range);
+                f /= 5.0;
+                if (f > 1.0) f = 1.0;
+                this.move(wheelSpeed * f, Direction.Backward);
+            }
+            else if (this.backboard_dist < cur_dist - range) {
+                double f = cur_dist - range - this.backboard_dist;
+                f /= 5.0;
+                if (f > 1.0) f = 1.0;
+                this.move(wheelSpeed * f, Direction.Forward);
+            }
+        }
     }
 
     @Override
