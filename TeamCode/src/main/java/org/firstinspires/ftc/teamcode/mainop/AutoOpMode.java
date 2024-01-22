@@ -115,7 +115,7 @@ public class AutoOpMode extends LinearOpMode {
                 case 0:
                     // turn arm
                     linear_part.startStep(LinearPart.Command.MOVE_DROP_POSITION);
-                    pincer_part.startStep(PincerPart.Command.MOVE_DROP_POSITION);
+                    pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
                     break;
                 case 1:
                     // move to board
@@ -138,7 +138,7 @@ public class AutoOpMode extends LinearOpMode {
                     break;
                 case 1:
                     // rotate arm
-                    pincer_part.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
+                    pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
                     break;
                 case 2:
                     // park;

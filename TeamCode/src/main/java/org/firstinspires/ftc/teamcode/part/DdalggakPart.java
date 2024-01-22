@@ -11,10 +11,11 @@ public class DdalggakPart extends Part {
     DcMotorHW ddalggak1, ddalggak2;
 
     MagSensorHW mag1;
+    public boolean isDdalggakOpen = true;
 
     public enum Command implements RobotCommand {
-        OPEN_DDALGGAK,
-        CLOSE_DDALGGAK
+        OPEN_OR_CLOSE_DDALGGAK,
+        //CLOSE_DDALGGAK
     }
 
     // Constructor
@@ -47,22 +48,42 @@ public class DdalggakPart extends Part {
     @Override
     protected void nextStep() {
         RobotCommand cmd = this.current_command;
-        if (this.current_command == Command.OPEN_DDALGGAK) {
-            switch (this.step) {
-                case 0 :
-                    this.setOpenDirection();
-                    ddalggak1.move(0.05);
-                    ddalggak2.move(0.05);
-                    mag1.untilActivated();
-                    break;
-                case 1:
-                    ddalggak1.stop();
-                    ddalggak2.stop();
-                    mag1.notUse();
-                    this.finishStep();
-                    break;
+        if (this.current_command == Command.OPEN_OR_CLOSE_DDALGGAK) {
+            if (!isDdalggakOpen) {
+                switch (this.step) {
+                    case 0:
+                        this.setOpenDirection();
+                        ddalggak1.move(0.05);
+                        ddalggak2.move(0.05);
+                        mag1.untilActivated();
+                        break;
+                    case 1:
+                        ddalggak1.stop();
+                        ddalggak2.stop();
+                        mag1.notUse();
+                        isDdalggakOpen = true;
+                        this.finishStep();
+                        break;
+                }
+            }
+            else {
+                switch (this.step) {
+                    case 0 :
+                        this.setCloseDirection();
+                        ddalggak1.move(0.5);
+                        ddalggak2.move(0.5);
+                        while(!ddalggak1.isFinished()){
+                            ddalggak1.update();
+                        }
+                        ddalggak1.stop();
+                        ddalggak2.stop();
+                        isDdalggakOpen = false;
+                        this.finishStep();
+                        break;
+                }
             }
         }
+        /*
         else if (this.current_command == Command.CLOSE_DDALGGAK) {
             switch (this.step) {
                 case 0 :
@@ -78,6 +99,8 @@ public class DdalggakPart extends Part {
                     break;
             }
         }
+        */
+
     }
 
     @Override

@@ -21,7 +21,8 @@ public class LinearPart extends Part {
         MOVE_UP,
         MOVE_DOWN,
         STOP,
-        MOVE_DROP_POSITION
+        MOVE_DROP_POSITION,
+        PULLUP
     }
 
     // Constructor

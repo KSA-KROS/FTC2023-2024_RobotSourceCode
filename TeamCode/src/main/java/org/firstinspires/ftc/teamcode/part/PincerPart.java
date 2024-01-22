@@ -20,6 +20,7 @@ public class PincerPart extends Part {
 
     public boolean is_left_opend = true;
     public boolean is_right_opend = true;
+    public boolean is_drop_position = false;
 
     public enum Command implements RobotCommand {
         GRAB_PIXEL_LEFT,
@@ -30,6 +31,7 @@ public class PincerPart extends Part {
         MOVE_GRAB_POSITION,
         GRAB_OR_DROP_PIXEL_LEFT,
         GRAB_OR_DROP_PIXEL_RIGHT,
+        MOVE_DROP_OR_GRAB_POSITION
     }
 
     // Constructor
@@ -102,20 +104,38 @@ public class PincerPart extends Part {
                     break;
             }
         }
-        else if (cmd == Command.MOVE_DROP_POSITION) {
-            switch (this.step){
-                case 0:
-                    this.arm1.moveWithInterval(armDropPosition, 2000);
-                    this.arm2.moveWithInterval(armDropPosition, 2000);
-                    break;
-                case 1:
-                    this.wrist.moveDirectly(wristDropPosition);
-                    break;
-                case 2:
-                    this.finishStep();
-                    break;
+        else if (cmd == Command.MOVE_DROP_OR_GRAB_POSITION) {
+            if (!is_drop_position) {
+                switch (this.step) {
+                    case 0:
+                        this.arm1.moveWithInterval(armDropPosition, 2000);
+                        this.arm2.moveWithInterval(armDropPosition, 2000);
+                        break;
+                    case 1:
+                        this.wrist.moveDirectly(wristDropPosition);
+                        break;
+                    case 2:
+                        is_drop_position = true;
+                        this.finishStep();
+                        break;
+                }
+            } else {
+                switch (this.step){
+                    case 0:
+                        this.wrist.moveDirectly(wristGrabPosition);
+                        break;
+                    case 1:
+                        this.arm1.moveWithInterval(armGrabPosition, 2000);
+                        this.arm2.moveWithInterval(armGrabPosition, 2000);
+                        break;
+                    case 2:
+                        is_drop_position = false;
+                        this.finishStep();
+                        break;
+                }
             }
         }
+        /*
         else if (cmd == Command.MOVE_GRAB_POSITION) {
             switch (this.step){
                 case 0:
@@ -130,6 +150,8 @@ public class PincerPart extends Part {
                     break;
             }
         }
+
+         */
         else if (cmd == Command.GRAB_OR_DROP_PIXEL_LEFT) {
             if (this.is_left_opend) {
                 this.finishStep();

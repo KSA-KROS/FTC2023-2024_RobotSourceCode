@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
+import org.firstinspires.ftc.teamcode.part.AirplanePart;
 import org.firstinspires.ftc.teamcode.part.DdalggakPart;
 import org.firstinspires.ftc.teamcode.part.LinearPart;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
@@ -15,6 +16,7 @@ public class TeleOpMode extends OpMode {
     private PincerPart pincer_part;
     private WheelPart wheel_part;
     private DdalggakPart ddalggak_part;
+    private AirplanePart airplane_part;
 
     private boolean is_emergency_mode = false;
 
@@ -27,6 +29,7 @@ public class TeleOpMode extends OpMode {
         this.pincer_part = new PincerPart(hardwareMap, telemetry);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
         this.ddalggak_part = new DdalggakPart(hardwareMap, telemetry);
+        this.airplane_part = new AirplanePart(hardwareMap, telemetry);
     }
 
     @Override
@@ -116,20 +119,21 @@ public class TeleOpMode extends OpMode {
 
         // Rotate the pincer
         if (gamepad2.triangle) {
-            this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_POSITION);
+            this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
         }
 
         // Ddalggak
         if (gamepad2.circle) {
-            this.ddalggak_part.startStep(DdalggakPart.Command.CLOSE_DDALGGAK);
+            this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK);
         }
         if (gamepad2.square) {
-            this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
+            //this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
+            this.airplane_part.startStep(AirplanePart.Command.FLY);
         }
 
         // Reset
         if (gamepad2.cross) {
-            this.pincer_part.startStep(PincerPart.Command.MOVE_GRAB_POSITION);
+            // this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
         }
     }
 
