@@ -41,7 +41,8 @@ public class WheelPart extends Part {
         VIEW_FORWARD,
         VIEW_BACKWARD,
         STOP,
-        MOVE_DETECT_POS
+        MOVE_DETECT_POS,
+        MOVE_TO_BOARD
     }
 
     public enum Direction {

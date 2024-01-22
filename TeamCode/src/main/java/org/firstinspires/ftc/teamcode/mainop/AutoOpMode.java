@@ -42,7 +42,7 @@ public class AutoOpMode extends LinearOpMode {
         waitForStart();
 
         // start
-        startStep(Command.DETECT_PIXELS);
+        // startStep(Command.DETECT_PIXELS);
 
         // Command Procedure
         Command[] command_procedure = {
@@ -117,11 +117,14 @@ public class AutoOpMode extends LinearOpMode {
             switch (this.step) {
                 case 0:
                     // turn arm
-                    linear_part.startStep(LinearPart.Command.MOVE_DROP_POSITION);
                     pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
+                    linear_part.startStep(LinearPart.Command.MOVE_DROP_POSITION);
                     break;
                 case 1:
                     // move to board
+                    while (!dist.isObjectDetected()) {
+                        wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
+                    }
                     break;
                 case 2:
                     // move to drop position
@@ -141,6 +144,7 @@ public class AutoOpMode extends LinearOpMode {
                     break;
                 case 1:
                     // rotate arm
+                    linear_part.startStep(LinearPart.Command.MOVE_ORIGINAL_POSITION);
                     pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
                     break;
                 case 2:

@@ -22,7 +22,8 @@ public class LinearPart extends Part {
         MOVE_DOWN,
         STOP,
         MOVE_DROP_POSITION,
-        MOVE_DOWN_POWERFUL
+        MOVE_DOWN_POWERFUL,
+        MOVE_ORIGINAL_POSITION
     }
 
     // Constructor
@@ -116,6 +117,16 @@ public class LinearPart extends Part {
                 case 0:
                     expand = true;
                     moveLinearWithTargetTicks(linear_speed_go_up, dropPosition);
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        } else if (cmd == Command.MOVE_ORIGINAL_POSITION) {
+            switch (this.step) {
+                case 0:
+                    expand = false;
+                    moveLinearWithTargetTicks(linear_speed_go_down, dropPosition);
                     break;
                 case 1:
                     this.finishStep();
