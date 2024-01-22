@@ -34,7 +34,7 @@ public class TeleOpMode extends OpMode {
 
     @Override
     public void start() {
-        //this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
+
     }
 
     @Override
@@ -43,7 +43,8 @@ public class TeleOpMode extends OpMode {
         this.linear_part.update();
         this.pincer_part.update();
         this.wheel_part.update(this.linear_part.getLength());
-        //this.ddalggak_part.update();
+        this.ddalggak_part.update();
+        this.airplane_part.update();
 
         if (this.is_emergency_mode) {
             this.processGamepad1WhenEmergency();
@@ -55,14 +56,14 @@ public class TeleOpMode extends OpMode {
 
         this.emergencyOnOFF();
 
-        //this.telemetry.update();
+        this.telemetry.update();
     }
 
     private void processGamepad1() {
         // For optimization : do not process (start commands) if the gamepad1 state is not changed
-        String gamepad1_state = gamepad1.toString();
-        if (gamepad1_state.equals(this.prev_gamepad1_state)) return;
-        this.prev_gamepad1_state = gamepad1_state;
+        //String gamepad1_state = gamepad1.toString();
+        //if (gamepad1_state.equals(this.prev_gamepad1_state)) return;
+        //this.prev_gamepad1_state = gamepad1_state;
 
         if (gamepad1.dpad_up) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
@@ -89,32 +90,34 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.onAutoDistance();
             //this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
-            this.wheel_part.onAutoDistance();
+            this.wheel_part.offAutoDistance();
             this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
         }
     }
 
     private void processGamepad2() {
-        // For optimization : do not process (start commands) if the gamepad2 state is not changed
-        String gamepad2_state = gamepad1.toString();
-        if (gamepad2_state.equals(this.prev_gamepad2_state)) return;
-        this.prev_gamepad2_state = gamepad2_state;
-
         // Linear Up and Down
-        if (gamepad2.dpad_up) {
+        if (this.pincer_part.isAbleToMovingLinear() && gamepad2.dpad_up) {
             this.linear_part.startStep(LinearPart.Command.MOVE_UP);
-        } else if (gamepad2.dpad_down) {
+        } else if (this.pincer_part.isAbleToMovingLinear() && gamepad2.dpad_down) {
             this.linear_part.startStep(LinearPart.Command.MOVE_DOWN);
+        } else if (this.pincer_part.isAbleToMovingLinear() && gamepad2.cross) {
+            this.linear_part.startStep(LinearPart.Command.MOVE_DOWN_POWERFUL);
         } else {
             this.linear_part.startStep(LinearPart.Command.STOP);
         }
 
+        // For optimization : do not process (start commands) if the gamepad2 state is not changed
+        String gamepad2_state = gamepad2.toString();
+        if (gamepad2_state.equals(this.prev_gamepad2_state)) return;
+        this.prev_gamepad2_state = gamepad2_state;
+
         // Pincer Grab and Drop
         if (gamepad2.left_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
+            this.pincer_part.controlLeftFinger();
         }
         if (gamepad2.right_bumper) {
-            this.pincer_part.startStep(PincerPart.Command.GRAB_OR_DROP_PIXEL_LEFT);
+            this.pincer_part.controlRightFinger();
         }
 
         // Rotate the pincer
@@ -126,14 +129,10 @@ public class TeleOpMode extends OpMode {
         if (gamepad2.circle) {
             this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK);
         }
-        if (gamepad2.square) {
-            //this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_DDALGGAK);
-            this.airplane_part.startStep(AirplanePart.Command.FLY);
-        }
 
-        // Reset
-        if (gamepad2.cross) {
-            // this.pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
+        // Airplane
+        if (gamepad2.square) {
+            this.airplane_part.startStep(AirplanePart.Command.FLY);
         }
     }
 

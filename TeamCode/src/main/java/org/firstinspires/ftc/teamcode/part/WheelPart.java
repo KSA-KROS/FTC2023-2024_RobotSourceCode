@@ -87,6 +87,12 @@ public class WheelPart extends Part {
         wheelBR.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.FORWARD);
         wheelBL.setUsingBrake(true).setUsingEncoder(false).setDirection(DcMotorSimple.Direction.REVERSE);
 
+        wheelFR.setUsingFixation(false);
+        wheelFL.setUsingFixation(false);
+        wheelBR.setUsingFixation(false);
+        wheelBL.setUsingFixation(false);
+
+
         this.hardware_manager.registerHardware(this.wheelFR).registerHardware(this.wheelFL);
         this.hardware_manager.registerHardware(this.wheelBR).registerHardware(this.wheelBL);
         this.hardware_manager.registerHardware(this.backboard_dist_sensor);

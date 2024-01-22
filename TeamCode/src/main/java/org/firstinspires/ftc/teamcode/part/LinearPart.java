@@ -22,7 +22,7 @@ public class LinearPart extends Part {
         MOVE_DOWN,
         STOP,
         MOVE_DROP_POSITION,
-        PULLUP
+        MOVE_DOWN_POWERFUL
     }
 
     // Constructor
@@ -39,6 +39,9 @@ public class LinearPart extends Part {
         linear2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
 
         this.hardware_manager.registerHardware(linear1).registerHardware(linear2).registerHardware(mag);
+
+        linear2.setSyncedDC(this.linear1);
+        linear1.setThisDcAsSynced();
     }
 
     public double getLength() {
@@ -80,6 +83,17 @@ public class LinearPart extends Part {
                 case 0:
                     expand = false;
                     moveLinear(linear_speed_go_down);
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.MOVE_DOWN_POWERFUL) {
+            switch (this.step) {
+                case 0:
+                    expand = false;
+                    moveLinear(0.8);
                     break;
                 case 1:
                     this.finishStep();

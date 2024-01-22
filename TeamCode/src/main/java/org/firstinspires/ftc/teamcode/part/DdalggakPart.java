@@ -15,7 +15,6 @@ public class DdalggakPart extends Part {
 
     public enum Command implements RobotCommand {
         OPEN_OR_CLOSE_DDALGGAK,
-        //CLOSE_DDALGGAK
     }
 
     // Constructor
@@ -28,10 +27,10 @@ public class DdalggakPart extends Part {
         this.mag1 = new MagSensorHW("dgmag1", hwm, tel);
         this.mag1.notUse();
 
-        ddalggak1.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
-        ddalggak2.setUsingBrake(true).setUsingFixation(true).setUsingEncoder(false);
+        ddalggak1.setUsingBrake(true).setUsingFixation(false).setUsingEncoder(false);
+        ddalggak2.setUsingBrake(true).setUsingFixation(false).setUsingEncoder(false);
 
-        this.hardware_manager.registerHardware(ddalggak1)/*.registerHardware(ddalggak2)*/;
+        this.hardware_manager.registerHardware(ddalggak1).registerHardware(ddalggak2);
         this.hardware_manager.registerHardware(mag1);
     }
 
@@ -53,14 +52,15 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0:
                         this.setOpenDirection();
-                        ddalggak1.move(0.05);
-                        ddalggak2.move(0.05);
-                        mag1.untilActivated();
-                        break;
-                    case 1:
-                        ddalggak1.stop();
-                        ddalggak2.stop();
-                        mag1.notUse();
+                        ddalggak1.move(0.8, 75);
+                        ddalggak2.move(0.8, 75);
+                        int trigger = 0;
+                        while (trigger != 3) {
+                            ddalggak1.update();
+                            ddalggak2.update();
+                            if (trigger != 1 && ddalggak1.isFinished()) { ddalggak1.stop(); trigger |= 1;}
+                            if (trigger != 2 && ddalggak2.isFinished()) { ddalggak2.stop(); trigger |= 2;}
+                        }
                         isDdalggakOpen = true;
                         this.finishStep();
                         break;
@@ -70,42 +70,25 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0 :
                         this.setCloseDirection();
-                        ddalggak1.move(0.5);
-                        ddalggak2.move(0.5);
-                        while(!ddalggak1.isFinished()){
+                        ddalggak1.move(0.8, 75);
+                        ddalggak2.move(0.8, 75);
+                        int trigger = 0;
+                        while (trigger != 3) {
                             ddalggak1.update();
+                            ddalggak2.update();
+                            if (trigger != 1 && ddalggak1.isFinished()) { ddalggak1.stop(); trigger |= 1;}
+                            if (trigger != 2 && ddalggak2.isFinished()) { ddalggak2.stop(); trigger |= 2;}
                         }
-                        ddalggak1.stop();
-                        ddalggak2.stop();
                         isDdalggakOpen = false;
                         this.finishStep();
                         break;
                 }
             }
         }
-        /*
-        else if (this.current_command == Command.CLOSE_DDALGGAK) {
-            switch (this.step) {
-                case 0 :
-                    this.setCloseDirection();
-                    ddalggak1.move(0.5);
-                    ddalggak2.move(0.5);
-                    while(!ddalggak1.isFinished()){
-                        ddalggak1.update();
-                    }
-                    ddalggak1.stop();
-                    ddalggak2.stop();
-                    this.finishStep();
-                    break;
-            }
-        }
-        */
-
     }
 
     @Override
     public void update(){
         super.update();
-        this.telemetry.addData("Degree", this.ddalggak1.getCurrentTick());
     }
 }

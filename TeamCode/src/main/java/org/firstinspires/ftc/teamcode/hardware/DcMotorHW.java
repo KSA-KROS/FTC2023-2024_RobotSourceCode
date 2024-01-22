@@ -8,12 +8,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DcMotorHW extends Hardware {
     private DcMotor motor;
-    private int target_ticks = 0;
+    private double target_ticks = 0;
     private boolean is_busy = false;
     private boolean is_free_moving = false;
     private boolean using_fixation = false;
-    private double fixation_power = 0.0;
+    private double fixation_power = 2.0;
     public double accumulated_moving_distance = 0.0;
+
+    private DcMotorHW synced_dc;
+    private boolean synced = false;
+    private boolean syncing = false;
 
     // ==================== Initialization ====================
     // Initialize the DC Motor with the standard settings
@@ -32,6 +36,15 @@ public class DcMotorHW extends Hardware {
         DcMotor.RunMode mode = this.motor.getMode();
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(mode);
+    }
+
+    public void setSyncedDC(DcMotorHW dc) {
+        this.synced_dc = dc;
+        this.syncing = true;
+    }
+
+    public void setThisDcAsSynced() {
+        this.synced = true;
     }
 
     // ==================== Settings ====================
@@ -85,7 +98,7 @@ public class DcMotorHW extends Hardware {
     }
     // Move the motor with the given power and the given ticks
     // : moving with the given ticks, fixation is automated
-    public void move(double power, int ticks) {
+    public void move(double power, double ticks) {
         this.initEncoder();
         this.target_ticks = ticks;
         this.is_busy = true;
@@ -95,6 +108,7 @@ public class DcMotorHW extends Hardware {
     }
     // Move the motor with the given power and the given ticks and the given fixation power
     // : moving with the given ticks, fixation is manual
+    /*
     public void move(double power, int ticks, double fixation_power) {
         this.initEncoder();
         this.target_ticks = ticks;
@@ -103,12 +117,13 @@ public class DcMotorHW extends Hardware {
         this.fixation_power = fixation_power;
         this.motor.setPower(power);
     }
+    */
     // Stop the motor
     public void stop() {
-        this.initEncoder();
-        this.target_ticks = 0;
+        this.target_ticks = this.getCurrentTick();
         this.is_busy = false;
         this.is_free_moving = false;
+        this.fixation_power = 2.0; // AUTOMATED
         this.motor.setPower(0);
     }
 
@@ -120,13 +135,16 @@ public class DcMotorHW extends Hardware {
                 this.motor.setPower(0);
             }
         }
-        else if (this.using_fixation && !this.is_free_moving) {
+        else if (this.using_fixation && !this.is_free_moving && !this.synced) {
             double power = this.fixation_power;
             if (power == 2.0) { // AUTOMATED MODE
                 // ideal_abs_power : ideal motor power (+ or -)
                 // current_abs_power : current motor power (+ or -)
                 double ideal_power = (double)(this.target_ticks - Math.abs(this.motor.getCurrentPosition())) / this.motor.getMotorType().getTicksPerRev();
                 double current_power = this.motor.getPower();
+                telemetry.addLine("FIXED");
+                telemetry.addData("target", this.target_ticks);
+                telemetry.addData("Cur pos", this.getCurrentTick());
                 if (ideal_power * current_power < 0) {
                     // if the motor is going to the opposite direction, power = ideal_power
                     power = ideal_power;
@@ -140,12 +158,23 @@ public class DcMotorHW extends Hardware {
                     power = 1.0;
                 }
             }
-            if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
-                this.motor.setPower(-power);
-            } else if (Math.abs(this.motor.getCurrentPosition()) < this.target_ticks) {
-                this.motor.setPower(power);
-            } else {
-                this.motor.setPower(0);
+            if (this.target_ticks > 10.0) {
+                if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
+                    this.motor.setPower(-power);
+                    if (this.syncing) {
+                        this.synced_dc.motor.setPower(-power);
+                    }
+                } else if (Math.abs(this.motor.getCurrentPosition()) < this.target_ticks) {
+                    this.motor.setPower(power);
+                    if (this.syncing) {
+                        this.synced_dc.motor.setPower(power);
+                    }
+                } else {
+                    this.motor.setPower(0);
+                    if (this.syncing) {
+                        this.synced_dc.motor.setPower(0);
+                    }
+                }
             }
         }
     }
