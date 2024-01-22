@@ -28,7 +28,7 @@ public boolean isObjectDetected() {
     }
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 
     @Override

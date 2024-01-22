@@ -120,11 +120,13 @@ public class DcMotorHW extends Hardware {
     */
     // Stop the motor
     public void stop() {
-        this.target_ticks = this.getCurrentTick();
-        this.is_busy = false;
-        this.is_free_moving = false;
-        this.fixation_power = 2.0; // AUTOMATED
-        this.motor.setPower(0);
+        if(this.is_free_moving || this.is_busy) {
+            this.target_ticks = this.getCurrentTick();
+            this.is_busy = false;
+            this.is_free_moving = false;
+            this.fixation_power = 2.0; // AUTOMATED
+            this.motor.setPower(0);
+        }
     }
 
     @Override
@@ -142,9 +144,6 @@ public class DcMotorHW extends Hardware {
                 // current_abs_power : current motor power (+ or -)
                 double ideal_power = (double)(this.target_ticks - Math.abs(this.motor.getCurrentPosition())) / this.motor.getMotorType().getTicksPerRev();
                 double current_power = this.motor.getPower();
-                telemetry.addLine("FIXED");
-                telemetry.addData("target", this.target_ticks);
-                telemetry.addData("Cur pos", this.getCurrentTick());
                 if (ideal_power * current_power < 0) {
                     // if the motor is going to the opposite direction, power = ideal_power
                     power = ideal_power;

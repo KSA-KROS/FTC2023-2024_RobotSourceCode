@@ -20,10 +20,20 @@ public class IMUHW extends Hardware{
     private RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     private RevHubOrientationOnRobot.UsbFacingDirection  usbDirection;
 
+    private boolean is_finish = true;
+
     public IMUHW(String name, HardwareMap hwm, Telemetry tel) {
         super(name, hwm, tel);
         this.imu = hwm.get(IMU.class, this.name);
         this.setOrientation();
+    }
+
+    public void setIsNotFinished(){
+        this.is_finish = false;
+    }
+
+    public void setIsFinished(){
+        this.is_finish = true;
     }
 
     private IMUHW setOrientation() {
@@ -88,13 +98,17 @@ public class IMUHW extends Hardware{
 
     @Override
     public void update() {
+        if(prev_time == 0) {
+            prev_time = System.currentTimeMillis();
+            return;
+        }
         long timeChange = System.currentTimeMillis() - prev_time;
         prev_time = System.currentTimeMillis();
         this.currentAngle = this.calcAngle('Z', timeChange);
     }
 
     public boolean isFinished() {
-        return false;
+        return this.is_finish;
     }
 
     public void emergencyStop() {

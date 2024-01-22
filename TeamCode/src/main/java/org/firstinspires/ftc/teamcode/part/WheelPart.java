@@ -24,6 +24,10 @@ public class WheelPart extends Part {
     private double backboard_dist = 0.0;
     private boolean use_auto = false;
 
+    private double autoview_angle;
+    private double autoview_speed;
+    private boolean autoview_running = false;
+
     public IMUHW imuhw;
     public enum Command implements RobotCommand {
         MOVE_FORWARD,
@@ -116,6 +120,15 @@ public class WheelPart extends Part {
     public boolean turn = false;
 
     public void move(double speed, double angle) {
+        this.imuhw.setIsNotFinished();
+        this.autoview_angle = angle;
+        this.autoview_speed = speed;
+        this.autoview_running = true;
+    }
+
+    private void autoview() {
+        double angle = this.autoview_angle;
+        double speed = this.autoview_speed;
         double currentAngle = imuhw.getAngle();
         Direction dir;
         double right = (currentAngle - angle + 360) % 360;
@@ -131,6 +144,13 @@ public class WheelPart extends Part {
                 speed *= level / 10;
             }
             move(speed, dir);
+        }
+        this.telemetry.addData("Cur Angle", currentAngle);
+        this.telemetry.addData("Tar Angle", angle);
+        if (level < 1.0) {
+            this.imuhw.setIsFinished();
+            this.autoview_running = false;
+            stop();
         }
     }
 
@@ -198,6 +218,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Forward);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -205,6 +227,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Backward);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -212,6 +236,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Left);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -219,6 +245,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Right);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -243,6 +271,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, -90.0);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -250,6 +280,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, 90.0);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -257,6 +289,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, 0.0);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -264,6 +298,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, 180.0);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -273,6 +309,8 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.move(wheelSpeed, Direction.Forward, AutoOpMode.detectPosLength);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
@@ -287,6 +325,13 @@ public class WheelPart extends Part {
                     break;
             }
         }
+    }
 
+    @Override
+    public void update() {
+        super.update();
+        if(this.autoview_running){
+            this.autoview();
+        }
     }
 }

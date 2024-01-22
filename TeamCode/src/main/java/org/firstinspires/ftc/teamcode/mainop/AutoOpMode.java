@@ -21,8 +21,6 @@ public class AutoOpMode extends LinearOpMode {
     public WheelPart wheel_part;
     public DistSensorHW dist;
 
-    protected Telemetry telemetry;
-    protected HardwareMap hardware_map;
     protected HardwareManager hardware_manager;
     protected RobotCommand current_command = Part.Command.NONE;
     protected int step = 0;
@@ -35,9 +33,13 @@ public class AutoOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // init
-        this.linear_part = new LinearPart(hardware_map, telemetry);
-        this.pincer_part = new PincerPart(hardware_map, telemetry);
-        this.wheel_part = new WheelPart(hardware_map, telemetry);
+        this.linear_part = new LinearPart(hardwareMap, telemetry);
+        this.pincer_part = new PincerPart(hardwareMap, telemetry);
+        this.wheel_part = new WheelPart(hardwareMap, telemetry);
+
+        dist = new DistSensorHW("backboard", hardwareMap, telemetry);
+
+        waitForStart();
 
         // start
         startStep(Command.DETECT_PIXELS);
@@ -57,6 +59,8 @@ public class AutoOpMode extends LinearOpMode {
             this.pincer_part.update();
             this.wheel_part.update();
             this.update();
+
+            this.telemetry.update();
 
             if (this.isFinished()) {
                 this.startStep(command_procedure[procedure_step++]);
@@ -91,22 +95,21 @@ public class AutoOpMode extends LinearOpMode {
                     break;
                 case 1:
                     // turn and detect pixels
-                    if (dist.isObjectDetected()) {
-                        this.step++;
-                    } else {
+                    if (!dist.isObjectDetected()) {
                         wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
-                        if (!dist.isObjectDetected()) {
-                            wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
-                        }
-                        this.step++;
                     }
                     break;
                 case 2:
+                    if (!dist.isObjectDetected()) {
+                        wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
+                    }
+                    break;
+                case 3:
                     // drop pixel and turn to original position
                     pincer_part.startStep(PincerPart.Command.DROP_PIXEL_LEFT);
                     wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
                     break;
-                case 3:
+                case 4:
                     this.finishCommand();
                     break;
             }
@@ -144,6 +147,7 @@ public class AutoOpMode extends LinearOpMode {
                     // park;
                     break;
                 case 3:
+                    telemetry.addLine("FINISH");
                     this.finishCommand();
                     break;
             }
@@ -156,8 +160,8 @@ public class AutoOpMode extends LinearOpMode {
 
     // Change to the next step
     private void changeToTheNextStep() {
-        this.nextStep();
         this.step++;
+        this.nextStep();
     }
 
     // Update the hardware objects of the part and check the step was finished

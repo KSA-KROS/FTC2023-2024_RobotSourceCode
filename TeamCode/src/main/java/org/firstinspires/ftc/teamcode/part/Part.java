@@ -50,8 +50,8 @@ public abstract class Part {
 
     // Change to the next step
     private void changeToTheNextStep() {
-        this.nextStep();
         this.step++;
+        this.nextStep();
     }
 
     // Update the hardware objects of the part and check the step was finished
