@@ -161,26 +161,45 @@ public class AutoOpMode extends LinearOpMode {
 
                         wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
                         wheelMoveDir = WheelPart.Direction.Forward;
-                        pixelPos = 0;
-                    } else if (distright.isObjectDetected()) {
-                        wheelMoveLength = 100;
-                        wheelMoveDir = WheelPart.Direction.Forward;
-                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-                        wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
-                        wheelMoveDir = WheelPart.Direction.Left;
-                        robotPixelPos = 100;
                         pixelPos = 1;
-                    } else {
-                        wheelMoveLength = 100;
+                    } else if (distright.isObjectDetected()) {
+                        wheelMoveLength = 50;
                         wheelMoveDir = WheelPart.Direction.Forward;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-                        wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
-                        wheelMoveDir = WheelPart.Direction.Right;
-                        robotPixelPos = 100;
+
                         pixelPos = 2;
+                    } else {
+                        wheelMoveLength = 50;
+                        wheelMoveDir = WheelPart.Direction.Forward;
+                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+
+                        pixelPos = 0;
                     }
                     break;
                 case 2:
+                    if (pixelPos == 2) {
+                        wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
+                    } else if (pixelPos == 0) {
+                        wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
+                    }
+                    break;
+                case 3:
+
+                    if (pixelPos == 2) {
+                        wheelMoveDir = WheelPart.Direction.Backward;
+                        wheelMoveLength = 50;
+                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+                        wheelMoveDir = WheelPart.Direction.Left;
+                        robotPixelPos = 100;
+                    } else if (pixelPos == 0) {
+                        wheelMoveDir = WheelPart.Direction.Backward;
+                        wheelMoveLength = 50;
+                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+                        wheelMoveDir = WheelPart.Direction.Right;
+                        robotPixelPos = 100;
+                    }
+                    break;
+                case 4:
                     pincer_part.startStep(PincerPart.Command.DROP_PIXEL_LEFT);
                     pincer_part.startStep(PincerPart.Command.MOVE_DROP_OR_GRAB_POSITION);
                     break;
@@ -192,14 +211,14 @@ public class AutoOpMode extends LinearOpMode {
                     this.finishCommand();
                     break;
                     */
-                case 3:
+                case 5:
                     wheelMoveLength = 800 + robotPixelPos;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     break;
-                case 4:
+                case 6:
                     wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
                     break;
-                case 5:
+                case 7:
                     this.finishCommand();
                     break;
 
@@ -222,20 +241,20 @@ public class AutoOpMode extends LinearOpMode {
                     while (!dist.isObjectDetected(50)) {
                         wheel_part.move(wheel_part.wheelSpeed, WheelPart.Direction.Right);
                     }
+                    delayTime(1000);
                     // wheel_part.startStep(WheelPart.Command.STOP);
                     break;
                 case 3:
                     wheelMoveDir = WheelPart.Direction.Right;
-                    wheelMoveLength = 100 + pixelPos * 200;
+                    wheelMoveLength = 50 + pixelPos * 40;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-                    delayTime(1000);
                     // move to drop position
                     break;
                 case 4:
                     while (!dist.isObjectDetected(2)) {
                         wheel_part.move(wheel_part.wheelSpeed, WheelPart.Direction.Forward);
                     }
-                    // wheel_part.startStep(WheelPart.Command.STOP);
+                    wheel_part.startStep(WheelPart.Command.STOP);
                     break;
                 case 5:
                     // drop pixels
@@ -253,7 +272,7 @@ public class AutoOpMode extends LinearOpMode {
                     telemetry.addLine("case0");
                     delayTime(1000);
                     wheelMoveDir = WheelPart.Direction.Left;
-                    wheelMoveLength = 100 + pixelPos * 200 + 100;
+                    wheelMoveLength = 200 + pixelPos * 300 + 400;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     delayTime(1000);
                     break;

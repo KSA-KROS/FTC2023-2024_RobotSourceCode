@@ -135,12 +135,13 @@ public class WheelPart extends Part {
         double right = (currentAngle - angle + 360) % 360;
         double left = (angle - currentAngle + 360) % 360;
         double level = Math.min(left, right);
+
         if (left < right) {
             dir = Direction.TurnLeft;
-            level *= 1.01;
+            // level *= 1.01;
         } else {
             dir = Direction.TurnRight;
-            level *= 0.99;
+            // level *= 0.99;
         }
         if (currentAngle != angle) {
             if (level < 10) {
