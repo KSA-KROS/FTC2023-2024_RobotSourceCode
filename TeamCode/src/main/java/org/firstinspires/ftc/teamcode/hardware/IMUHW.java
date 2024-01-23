@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import java.util.Arrays;
 public class IMUHW extends Hardware{
     private IMU imu;
+    private IMU imu_sub;
 
     private double currentAngle = 0;
     private long prev_time = 0;
@@ -25,6 +26,7 @@ public class IMUHW extends Hardware{
     public IMUHW(String name, HardwareMap hwm, Telemetry tel) {
         super(name, hwm, tel);
         this.imu = hwm.get(IMU.class, this.name);
+        this.imu_sub = hwm.get(IMU.class, "imusub");
         this.setOrientation();
     }
 
@@ -70,8 +72,12 @@ public class IMUHW extends Hardware{
         return this.imu.getRobotAngularVelocity(AngleUnit.DEGREES);
     }
 
+    public AngularVelocity getSubAngularVelocity() {
+        return this.imu_sub.getRobotAngularVelocity(AngleUnit.DEGREES);
+    }
+
     public double getVelocity(double rotationRate) {
-        if (-0.2 < rotationRate && rotationRate< 0.2) {
+        if (-2.0 < rotationRate && rotationRate< 2.0) {
             return 0;
         }
         return rotationRate;
@@ -86,7 +92,8 @@ public class IMUHW extends Hardware{
         int index = directionToInt(rotationDirection); // = Arrays.asList(directions).indexOf(rotationDirection);
 
         float[] rotationRates = {this.getAngularVelocity().zRotationRate, this.getAngularVelocity().xRotationRate, this.getAngularVelocity().yRotationRate};
-        double rotationRate = rotationRates[index];
+        float[] rotationRatesSub = {this.getSubAngularVelocity().zRotationRate, this.getSubAngularVelocity().xRotationRate, this.getSubAngularVelocity().yRotationRate};
+        double rotationRate = rotationRates[index] * 0.7 + rotationRatesSub[index] * 0.3;
         imuAngles[index] += getVelocity(rotationRate) * time / 1000;
         if (imuAngles[index] >= 180) {
             imuAngles[index] -= 360;
