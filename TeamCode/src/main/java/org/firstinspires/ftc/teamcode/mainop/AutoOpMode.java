@@ -68,8 +68,7 @@ public class AutoOpMode extends LinearOpMode {
         int procedure_step = -1;
 
         // loop
-        run = true;
-        while (run) {
+        while (true) {
             this.linear_part.update();
             this.pincer_part.update();
             this.wheel_part.update();
@@ -78,9 +77,8 @@ public class AutoOpMode extends LinearOpMode {
             this.telemetry.update();
 
             if (this.isFinished()) {
-                this.startStep(command_procedure[++procedure_step]);
-                telemetry.addData("Procedure Step", procedure_step);
-                if (procedure_step >= command_procedure.length) run = false;
+                if (++procedure_step >= command_procedure.length) break;
+                this.startStep(command_procedure[procedure_step]);
             }
         }
     }
