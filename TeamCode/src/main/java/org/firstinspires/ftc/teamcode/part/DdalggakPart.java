@@ -11,7 +11,7 @@ public class DdalggakPart extends Part {
     DcMotorHW ddalggak1, ddalggak2;
 
     MagSensorHW mag1, mag2;
-    private boolean isDdalggakOpen = true;
+    private boolean isDdalggakOpen = false;
 
     private long time_limit = 2000;
 
@@ -41,13 +41,13 @@ public class DdalggakPart extends Part {
     }
 
     private void setCloseDirection() {
-        ddalggak1.setDirection(DcMotorSimple.Direction.FORWARD);
-        ddalggak2.setDirection(DcMotorSimple.Direction.REVERSE);
+        ddalggak1.setDirection(DcMotorSimple.Direction.REVERSE);
+        ddalggak2.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     private void setOpenDirection() {
-        ddalggak1.setDirection(DcMotorSimple.Direction.REVERSE);
-        ddalggak2.setDirection(DcMotorSimple.Direction.FORWARD);
+        ddalggak1.setDirection(DcMotorSimple.Direction.FORWARD);
+        ddalggak2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -73,6 +73,7 @@ public class DdalggakPart extends Part {
                         break;
                 }
                 */
+                this.finishStep();
                 this.startStep(Command.RESET_DDALGGAK);
             }
             else {
@@ -97,6 +98,7 @@ public class DdalggakPart extends Part {
                             this.finishStep();
                         }
                         else {
+                            this.finishStep();
                             this.startStep(Command.RESET_DDALGGAK);
                         }
                         break;
@@ -123,6 +125,7 @@ public class DdalggakPart extends Part {
                         break;
                 }
                 */
+                this.finishStep();
                 this.startStep(Command.RESET_DDALGGAK);
             }
             else {
@@ -147,6 +150,7 @@ public class DdalggakPart extends Part {
                             this.finishStep();
                         }
                         else {
+                            this.finishStep();
                             this.startStep(Command.RESET_DDALGGAK);
                         }
                         break;
@@ -158,18 +162,20 @@ public class DdalggakPart extends Part {
                 case 0 :
                     this.setOpenDirection();
                     ddalggak1.move(0.1);
-                    ddalggak2.move(0.1);
+                    ddalggak2.stop();
                     mag1.untilActivated();
-                    mag2.untilActivated();
+                    mag2.notUse();
                     break;
                 case 1:
-                    this.setCloseDirection();
-                    ddalggak1.move(0.1);
+                    this.setOpenDirection();
+                    ddalggak1.stop();
                     ddalggak2.move(0.1);
-                    mag1.untilInactivate();
-                    mag2.untilInactivate();
+                    mag1.notUse();
+                    mag2.untilActivated();
                     break;
                 case 2:
+                    ddalggak1.stop();
+                    ddalggak2.stop();
                     mag1.notUse();
                     mag2.notUse();
                     this.finishStep();
