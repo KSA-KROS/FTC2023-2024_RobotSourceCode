@@ -23,6 +23,10 @@ public class DistSensorHW extends Hardware{
 public boolean isObjectDetected() {
         return (this.dist.getDistance(DistanceUnit.CM) < 10);
 }
+
+public boolean isObjectDetected(int distcm) {
+        return (this.dist.getDistance(DistanceUnit.CM) < distcm);
+}
     @Override
     public void update() {
     }

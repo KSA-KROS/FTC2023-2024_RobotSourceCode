@@ -73,7 +73,7 @@ public class WheelPart extends Part {
         }
     }
 
-    public double wheelSpeed = 0.2;
+    public double wheelSpeed = 0.5;
     public double wheelSpeedFast = 1.0;
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
@@ -137,18 +137,24 @@ public class WheelPart extends Part {
         double level = Math.min(left, right);
         if (left < right) {
             dir = Direction.TurnLeft;
+            level *= 1.01;
         } else {
             dir = Direction.TurnRight;
+            level *= 0.99;
         }
         if (currentAngle != angle) {
             if (level < 10) {
                 speed *= level / 10;
+                // speed *= level;
+                if (speed < 0.1) speed = 0.1;
             }
             move(speed, dir);
         }
         this.telemetry.addData("Cur Angle", currentAngle);
         this.telemetry.addData("Tar Angle", angle);
-        if (level < 1.0) {
+        this.telemetry.addData("Speed", speed);
+        this.telemetry.addData("Level", level);
+        if (level < 0.5) {
             this.imuhw.setIsFinished();
             this.autoview_running = false;
             stop();
