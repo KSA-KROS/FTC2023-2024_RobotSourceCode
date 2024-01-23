@@ -42,7 +42,7 @@ public class WheelPart extends Part {
         VIEW_BACKWARD,
         STOP,
         MOVE_DETECT_POS,
-        MOVE_TO_BOARD
+        AUTO_MOVE
     }
 
     public enum Direction {
@@ -322,6 +322,17 @@ public class WheelPart extends Part {
             switch (this.step) {
                 case 0:
                     this.stop();
+                    this.finishStep();
+                    break;
+            }
+        }
+
+        else if (cmd == WheelPart.Command.AUTO_MOVE) {
+            switch (this.step) {
+                case 0:
+                    this.move(wheelSpeed, AutoOpMode.wheelMoveDir, AutoOpMode.wheelMoveLength);
+                    break;
+                case 1:
                     this.finishStep();
                     break;
             }
