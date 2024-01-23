@@ -71,6 +71,7 @@ public class AutoOpMode extends LinearOpMode {
 
             if (this.isFinished()) {
                 this.startStep(command_procedure[procedure_step++]);
+                telemetry.addData("Procedure Step", procedure_step);
                 if (procedure_step >= command_procedure.length) run = false;
             }
         }

@@ -77,6 +77,10 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
         } else if (gamepad1.right_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_RIGHT);
+        } else if (gamepad1.left_trigger > 0.1) {
+            this.wheel_part.move(gamepad1.left_trigger * 0.8, WheelPart.Direction.TurnLeft);
+        } else if (gamepad1.right_trigger > 0.1) {
+            this.wheel_part.move(gamepad1.right_trigger * 0.8, WheelPart.Direction.TurnRight);
         } else if (gamepad1.triangle) {
             this.wheel_part.onAutoDistance();
             //this.wheel_part.startStep(WheelPart.Command.VIEW_FORWARD);
@@ -127,11 +131,18 @@ public class TeleOpMode extends OpMode {
 
         // Ddalggak
         if (gamepad2.circle) {
+            this.wheel_part.emergencyStop();
+            this.linear_part.emergencyStop();
+            this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK_GENTLY);
+        }
+
+        // Ddalggak
+        if (gamepad2.square) {
             this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK);
         }
 
         // Airplane
-        if (gamepad2.square) {
+        if (gamepad2.left_stick_button || gamepad2.right_stick_button) {
             this.airplane_part.startStep(AirplanePart.Command.FLY);
         }
     }

@@ -73,7 +73,7 @@ public class WheelPart extends Part {
         }
     }
 
-    public double wheelSpeed = 0.4;
+    public double wheelSpeed = 0.2;
     public double wheelSpeedFast = 1.0;
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
@@ -345,5 +345,11 @@ public class WheelPart extends Part {
         if(this.autoview_running){
             this.autoview();
         }
+    }
+
+    @Override
+    public void emergencyStop(){
+        super.emergencyStop();
+        this.stop();
     }
 }

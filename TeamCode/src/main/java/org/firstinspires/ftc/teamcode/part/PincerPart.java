@@ -8,15 +8,17 @@ import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class PincerPart extends Part {
     ServoHW finger1, finger2, arm1, arm2, wrist;
-    private final double fingerClosePosition = 0.36;
-    private final double fingerOpenPosition = 0.5;
+    private final double fingerClosePosition = 0.33;
+    private final double fingerOpenPosition = 0.46;
+
+    private final double offset_for_left = 0.03;
 
 
     private final double wristDropPosition = 0.87;
     private final double wristGrabPosition = 0.51;
 
-    private final double armGrabPosition = 0.7;
-    private final double armDropPosition = 0;
+    private final double armGrabPosition = 0.985;
+    private final double armDropPosition = 0.25;
 
     public boolean is_left_opend = true;
     public boolean is_right_opend = true;
@@ -56,7 +58,7 @@ public class PincerPart extends Part {
         arm2.setDirection(Servo.Direction.REVERSE);
 
         finger1.setInitialPosition(fingerOpenPosition);
-        finger2.setInitialPosition(fingerOpenPosition);
+        finger2.setInitialPosition(fingerOpenPosition + offset_for_left);
         wrist.setInitialPosition(wristGrabPosition);
         arm1.setInitialPosition(armGrabPosition);
         arm2.setInitialPosition(armGrabPosition);
@@ -71,7 +73,7 @@ public class PincerPart extends Part {
 
     public void closeLeftFinger() {
         this.is_left_opend = false;
-        this.finger2.moveDirectly(fingerClosePosition);
+        this.finger2.moveDirectly(fingerClosePosition + offset_for_left);
     }
     public void closeRightFinger() {
         this.is_right_opend = false;
@@ -79,7 +81,7 @@ public class PincerPart extends Part {
     }
     public void openLeftFinger() {
         this.is_left_opend = true;
-        this.finger2.moveDirectly(fingerOpenPosition);
+        this.finger2.moveDirectly(fingerOpenPosition + offset_for_left);
     }
     public void openRightFinger() {
         this.is_right_opend = true;
@@ -158,6 +160,8 @@ public class PincerPart extends Part {
             } else {
                 switch (this.step){
                     case 0:
+                        this.closeLeftFinger();
+                        this.closeRightFinger();
                         this.is_able_to_move_linear = false;
                         this.wrist.moveDirectly(wristGrabPosition);
                         break;
@@ -166,6 +170,8 @@ public class PincerPart extends Part {
                         this.arm2.moveWithInterval(armGrabPosition, 3000);
                         break;
                     case 2:
+                        this.openLeftFinger();
+                        this.openRightFinger();
                         is_drop_position = false;
                         this.finishStep();
                         break;
@@ -190,8 +196,8 @@ public class PincerPart extends Part {
 
          */
         else if (cmd == Command.GRAB_OR_DROP_PIXEL_LEFT) {
-           this.controlLeftFinger();
-           this.finishStep();
+            this.controlLeftFinger();
+            this.finishStep();
         }
         else if (cmd == Command.GRAB_OR_DROP_PIXEL_RIGHT) {
             this.controlRightFinger();

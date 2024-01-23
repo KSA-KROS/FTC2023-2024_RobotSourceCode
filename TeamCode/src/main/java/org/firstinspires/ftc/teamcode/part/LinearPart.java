@@ -153,4 +153,11 @@ public class LinearPart extends Part {
             this.correcting_limit = false;
         }
     }
+
+    @Override
+    public void emergencyStop() {
+        super.emergencyStop();
+        this.linear1.stop();
+        this.linear2.stop();
+    }
 }
