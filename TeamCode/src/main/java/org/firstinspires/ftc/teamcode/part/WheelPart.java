@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DcMotorHW;
 import org.firstinspires.ftc.teamcode.hardware.DistSensorHW;
 import org.firstinspires.ftc.teamcode.hardware.IMUHW;
-import org.firstinspires.ftc.teamcode.mainop.AutoOpMode;
+import org.firstinspires.ftc.teamcode.mainop.AutoOpModeLeft;
 
 public class WheelPart extends Part {
     // FR: Front-Right, FL: Front-Left, BR: Back-Right, BL: Back-Left
@@ -43,7 +43,8 @@ public class WheelPart extends Part {
         STOP,
         MOVE_DETECT_POS,
         AUTO_MOVE,
-        AUTO_MOVE_WITH_SOME_DELAY
+        AUTO_LEFT_WITH_SOME_DELAY,
+        AUTO_RIGHT_WITH_SOME_DELAY
     }
 
     public enum Direction {
@@ -322,7 +323,7 @@ public class WheelPart extends Part {
         else if (cmd == WheelPart.Command.MOVE_DETECT_POS) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, Direction.Forward, AutoOpMode.detectPosLength);
+                    this.move(wheelSpeed, Direction.Forward, AutoOpModeLeft.detectPosLength);
                     break;
                 case 1:
                     this.finishStep();
@@ -343,7 +344,7 @@ public class WheelPart extends Part {
         else if (cmd == WheelPart.Command.AUTO_MOVE) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, AutoOpMode.wheelMoveDir, AutoOpMode.wheelMoveLength);
+                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
                     break;
                 case 1:
                     this.finishStep();
@@ -351,13 +352,28 @@ public class WheelPart extends Part {
             }
         }
 
-        else if (cmd == Command.AUTO_MOVE_WITH_SOME_DELAY) {
+        else if (cmd == Command.AUTO_LEFT_WITH_SOME_DELAY) {
             switch (this.step) {
                 case 0:
                     this.delayTime(2000);
                     break;
                 case 1:
-                    this.move(wheelSpeed, AutoOpMode.wheelMoveDir, AutoOpMode.wheelMoveLength);
+                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
+                    break;
+                case 2:
+                    this.move(wheelSpeed, 90.0); // LEFT VIEW
+                    break;
+                case 3:
+                    this.finishStep();
+                    break;
+            }
+        } else if (cmd == Command.AUTO_RIGHT_WITH_SOME_DELAY) {
+            switch (this.step) {
+                case 0:
+                    this.delayTime(2000);
+                    break;
+                case 1:
+                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
                     break;
                 case 2:
                     this.move(wheelSpeed, 90.0); // LEFT VIEW

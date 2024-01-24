@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.mainop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.DistSensorHW;
 import org.firstinspires.ftc.teamcode.part.DdalggakPart;
 import org.firstinspires.ftc.teamcode.part.HardwareManager;
@@ -15,8 +12,8 @@ import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.RobotCommand;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
 
-@Autonomous(name = "AutoOpMode", group = "")
-public class AutoOpMode extends LinearOpMode {
+@Autonomous(name = "AutoOpModeLeft", group = "")
+public class AutoOpModeLeft extends LinearOpMode {
     public LinearPart linear_part;
     public PincerPart pincer_part;
     public WheelPart wheel_part;
@@ -199,7 +196,7 @@ public class AutoOpMode extends LinearOpMode {
                 case 6:
                     pincer_part.startStep(PincerPart.Command.AUTO_MOVE_DROP_OR_GRAB_POSITION);
                     wheelMoveLength = 800 + robotPixelPos;
-                    wheel_part.startStep(WheelPart.Command.AUTO_MOVE_WITH_SOME_DELAY);
+                    wheel_part.startStep(WheelPart.Command.AUTO_LEFT_WITH_SOME_DELAY);
                     linear_part.startStep(LinearPart.Command.MOVE_PSEUDO_UP_POSITION);
                 case 7:
                     this.finishCommand();
