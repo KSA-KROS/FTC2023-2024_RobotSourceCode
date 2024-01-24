@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class AirplanePart extends Part {
-    double airplaneInitPos = 0.0;
-    double airplaneFlyPos = 0.4;
+    double airplaneInitPos = 0.9;
+    double airplaneFlyPos = 0.1;
     ServoHW airplane;
     public enum Command implements RobotCommand {
         FLY
@@ -34,10 +34,5 @@ public class AirplanePart extends Part {
                     break;
             }
         }
-    }
-
-    @Override
-    public void update() {
-        super.update();
     }
 }

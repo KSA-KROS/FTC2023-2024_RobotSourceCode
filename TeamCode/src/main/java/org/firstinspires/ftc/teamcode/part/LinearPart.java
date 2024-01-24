@@ -15,13 +15,15 @@ public class LinearPart extends Part {
     private final double linear_speed_go_up = 0.6;
     private boolean correcting_limit = false;
 
-    public int dropPosition = 1000;
+    public int dropPosition = 900;
+    public int upPosition = 300;
 
     public enum Command implements RobotCommand {
         MOVE_UP,
         MOVE_DOWN,
         STOP,
         MOVE_DROP_POSITION,
+        MOVE_PSEUDO_UP_POSITION,
         MOVE_DOWN_POWERFUL,
         MOVE_ORIGINAL_POSITION
     }
@@ -122,11 +124,26 @@ public class LinearPart extends Part {
                     this.finishStep();
                     break;
             }
-        } else if (cmd == Command.MOVE_ORIGINAL_POSITION) {
+        }
+        else if (cmd == Command.MOVE_PSEUDO_UP_POSITION) {
+            switch (this.step) {
+                case 0:
+                    this.delayTime(2000);
+                    break;
+                case 1:
+                    expand = true;
+                    moveLinearWithTargetTicks(linear_speed_go_up, upPosition);
+                    break;
+                case 2:
+                    this.finishStep();
+                    break;
+            }
+        }
+        else if (cmd == Command.MOVE_ORIGINAL_POSITION) {
             switch (this.step) {
                 case 0:
                     expand = false;
-                    moveLinearWithTargetTicks(linear_speed_go_down, dropPosition);
+                    moveLinearWithTargetTicks(linear_speed_go_down, dropPosition + upPosition);
                     break;
                 case 1:
                     this.finishStep();

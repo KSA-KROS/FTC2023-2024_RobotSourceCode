@@ -42,7 +42,8 @@ public class WheelPart extends Part {
         VIEW_BACKWARD,
         STOP,
         MOVE_DETECT_POS,
-        AUTO_MOVE
+        AUTO_MOVE,
+        AUTO_MOVE_WITH_SOME_DELAY
     }
 
     public enum Direction {
@@ -75,6 +76,11 @@ public class WheelPart extends Part {
 
     public double wheelSpeed = 0.5;
     public double wheelSpeedFast = 1.0;
+
+    public void setTeleWheelSpeed() {
+        this.wheelSpeed = 0.2;
+    }
+
     public WheelPart(HardwareMap hwm, Telemetry tel) {
         super(hwm, tel);
 
@@ -340,6 +346,23 @@ public class WheelPart extends Part {
                     this.move(wheelSpeed, AutoOpMode.wheelMoveDir, AutoOpMode.wheelMoveLength);
                     break;
                 case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
+
+        else if (cmd == Command.AUTO_MOVE_WITH_SOME_DELAY) {
+            switch (this.step) {
+                case 0:
+                    this.delayTime(2000);
+                    break;
+                case 1:
+                    this.move(wheelSpeed, AutoOpMode.wheelMoveDir, AutoOpMode.wheelMoveLength);
+                    break;
+                case 2:
+                    this.move(wheelSpeed, 90.0); // LEFT VIEW
+                    break;
+                case 3:
                     this.finishStep();
                     break;
             }

@@ -15,10 +15,12 @@ public class PincerPart extends Part {
 
 
     private final double wristDropPosition = 0.87;
+    private final double wristDropPositionForAuto = 0.75;
     private final double wristGrabPosition = 0.51;
 
     private final double armGrabPosition = 0.985;
     private final double armDropPosition = 0.25;
+    private final double armDropPositionForAuto = 0.15;
 
     public boolean is_left_opend = true;
     public boolean is_right_opend = true;
@@ -34,7 +36,8 @@ public class PincerPart extends Part {
         MOVE_GRAB_POSITION,
         GRAB_OR_DROP_PIXEL_LEFT,
         GRAB_OR_DROP_PIXEL_RIGHT,
-        MOVE_DROP_OR_GRAB_POSITION
+        MOVE_DROP_OR_GRAB_POSITION,
+        AUTO_MOVE_DROP_OR_GRAB_POSITION
     }
 
     public boolean isAbleToMovingLinear() {
@@ -146,8 +149,8 @@ public class PincerPart extends Part {
                 switch (this.step) {
                     case 0:
                         this.is_able_to_move_linear = true;
-                        this.arm1.moveWithInterval(armDropPosition, 2500);
-                        this.arm2.moveWithInterval(armDropPosition, 2500);
+                        this.arm1.moveWithInterval(armDropPosition, 5000);
+                        this.arm2.moveWithInterval(armDropPosition, 5000);
                         break;
                     case 1:
                         this.wrist.moveDirectly(wristDropPosition);
@@ -166,8 +169,45 @@ public class PincerPart extends Part {
                         this.wrist.moveDirectly(wristGrabPosition);
                         break;
                     case 1:
-                        this.arm1.moveWithInterval(armGrabPosition, 2500);
-                        this.arm2.moveWithInterval(armGrabPosition, 2500);
+                        this.arm1.moveWithInterval(armGrabPosition, 3000);
+                        this.arm2.moveWithInterval(armGrabPosition, 3000);
+                        break;
+                    case 2:
+                        this.openLeftFinger();
+                        this.openRightFinger();
+                        is_drop_position = false;
+                        this.finishStep();
+                        break;
+                }
+            }
+        }
+        else if (cmd == Command.AUTO_MOVE_DROP_OR_GRAB_POSITION) {
+            if (!is_drop_position) {
+                switch (this.step) {
+                    case 0:
+                        this.is_able_to_move_linear = true;
+                        this.arm1.moveWithInterval(armDropPositionForAuto, 9000);
+                        this.arm2.moveWithInterval(armDropPositionForAuto, 9000);
+                        break;
+                    case 1:
+                        this.wrist.moveDirectly(wristDropPositionForAuto);
+                        break;
+                    case 2:
+                        is_drop_position = true;
+                        this.finishStep();
+                        break;
+                }
+            } else {
+                switch (this.step){
+                    case 0:
+                        this.closeLeftFinger();
+                        this.closeRightFinger();
+                        this.is_able_to_move_linear = false;
+                        this.wrist.moveDirectly(wristGrabPosition);
+                        break;
+                    case 1:
+                        this.arm1.moveWithInterval(armGrabPosition, 7000);
+                        this.arm2.moveWithInterval(armGrabPosition, 7000);
                         break;
                     case 2:
                         this.openLeftFinger();

@@ -30,6 +30,8 @@ public class TeleOpMode extends OpMode {
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
         this.ddalggak_part = new DdalggakPart(hardwareMap, telemetry);
         this.airplane_part = new AirplanePart(hardwareMap, telemetry);
+
+        this.wheel_part.setTeleWheelSpeed();
     }
 
     @Override
@@ -66,13 +68,13 @@ public class TeleOpMode extends OpMode {
         //this.prev_gamepad1_state = gamepad1_state;
 
         if (gamepad1.dpad_up) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
-        } else if (gamepad1.dpad_down) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_BACKWARD);
+        } else if (gamepad1.dpad_down) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
         } else if (gamepad1.dpad_left) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
-        } else if (gamepad1.dpad_right) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
+        } else if (gamepad1.dpad_right) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
         } else if (gamepad1.left_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
         } else if (gamepad1.right_bumper) {
@@ -95,7 +97,7 @@ public class TeleOpMode extends OpMode {
             //this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
             this.wheel_part.offAutoDistance();
-            this.wheel_part.moveFreely(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            this.wheel_part.moveFreely(-gamepad1.left_stick_x, -gamepad1.left_stick_y);
         }
     }
 
@@ -131,14 +133,28 @@ public class TeleOpMode extends OpMode {
 
         // Ddalggak
         if (gamepad2.circle) {
-            this.wheel_part.emergencyStop();
-            this.linear_part.emergencyStop();
+            if(this.ddalggak_part.isOpenState()) {
+                this.wheel_part.emergencyStop();
+                this.linear_part.emergencyStop();
+            }
             this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK_GENTLY);
+            if(!this.ddalggak_part.isOpenState()) {
+                this.pincer_part.closeLeftFinger();
+                this.pincer_part.closeRightFinger();
+            }
         }
 
         // Ddalggak
         if (gamepad2.square) {
+            if(this.ddalggak_part.isOpenState()) {
+                this.wheel_part.emergencyStop();
+                this.linear_part.emergencyStop();
+            }
             this.ddalggak_part.startStep(DdalggakPart.Command.OPEN_OR_CLOSE_DDALGGAK);
+            if(!this.ddalggak_part.isOpenState()) {
+                this.pincer_part.closeLeftFinger();
+                this.pincer_part.closeRightFinger();
+            }
         }
 
         // Airplane

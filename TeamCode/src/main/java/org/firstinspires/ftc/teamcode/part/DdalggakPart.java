@@ -11,7 +11,7 @@ public class DdalggakPart extends Part {
     DcMotorHW ddalggak1, ddalggak2;
 
     MagSensorHW mag1, mag2;
-    private boolean isDdalggakOpen = false;
+    private boolean isDdalggakOpen = true;
 
     private long time_limit = 2000;
 
@@ -48,6 +48,10 @@ public class DdalggakPart extends Part {
     private void setOpenDirection() {
         ddalggak1.setDirection(DcMotorSimple.Direction.FORWARD);
         ddalggak2.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public boolean isOpenState() {
+        return this.isDdalggakOpen;
     }
 
     @Override
@@ -167,13 +171,19 @@ public class DdalggakPart extends Part {
                     mag2.notUse();
                     break;
                 case 1:
+                    mag1.untilInactivate();
+                    break;
+                case 2 :
                     this.setOpenDirection();
                     ddalggak1.stop();
                     ddalggak2.move(0.1);
                     mag1.notUse();
                     mag2.untilActivated();
                     break;
-                case 2:
+                case 3:
+                    mag2.untilInactivate();
+                    break;
+                case 4:
                     ddalggak1.stop();
                     ddalggak2.stop();
                     mag1.notUse();
