@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.hardware.MagSensorHW;
 public class DdalggakPart extends Part {
     DcMotorHW ddalggak1, ddalggak2;
 
-    MagSensorHW mag1, mag2;
     private boolean isDdalggakOpen = true;
 
     private long time_limit = 2000;
@@ -28,16 +27,10 @@ public class DdalggakPart extends Part {
         this.ddalggak1 = new DcMotorHW("ddalggak1", hwm, tel);
         this.ddalggak2 = new DcMotorHW("ddalggak2", hwm, tel);
 
-        this.mag1 = new MagSensorHW("dgmag1", hwm, tel);
-        this.mag2 = new MagSensorHW("dgmag2", hwm, tel);
-        this.mag1.notUse();
-        this.mag2.notUse();
-
         ddalggak1.setUsingBrake(true).setUsingFixation(false).setUsingEncoder(false);
         ddalggak2.setUsingBrake(true).setUsingFixation(false).setUsingEncoder(false);
 
         this.hardware_manager.registerHardware(ddalggak1).registerHardware(ddalggak2);
-        this.hardware_manager.registerHardware(mag1).registerHardware(mag2);
     }
 
     private void setCloseDirection() {
@@ -84,8 +77,8 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0 :
                         this.setCloseDirection();
-                        ddalggak1.move(0.8, 75);
-                        ddalggak2.move(0.8, 75);
+                        ddalggak1.move(0.8, 60);
+                        ddalggak2.move(0.8, 60);
                         int trigger = 0;
                         long begin_time = System.currentTimeMillis();
                         while (trigger != 3) {
@@ -136,8 +129,8 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0 :
                         this.setCloseDirection();
-                        ddalggak1.move(0.2, 75);
-                        ddalggak2.move(0.2, 75);
+                        ddalggak1.move(0.2, 85);
+                        ddalggak2.move(0.2, 85);
                         int trigger = 0;
                         long begin_time = System.currentTimeMillis();
                         while (trigger != 3) {
@@ -152,6 +145,20 @@ public class DdalggakPart extends Part {
                         if (trigger == 3) {
                             isDdalggakOpen = false;
                             this.finishStep();
+                            this.setOpenDirection();
+                            ddalggak1.move(0.2, 10);
+                            ddalggak2.move(0.2, 10);
+                            trigger = 0;
+                            begin_time = System.currentTimeMillis();
+                            while (trigger != 3) {
+                                ddalggak1.update();
+                                ddalggak2.update();
+                                if (trigger != 1 && ddalggak1.isFinished()) { ddalggak1.stop(); trigger |= 1;}
+                                if (trigger != 2 && ddalggak2.isFinished()) { ddalggak2.stop(); trigger |= 2;}
+                                if (System.currentTimeMillis() - begin_time > this.time_limit) {
+                                    break;
+                                }
+                            }
                         }
                         else {
                             this.finishStep();
@@ -164,39 +171,22 @@ public class DdalggakPart extends Part {
         if (this.current_command == Command.RESET_DDALGGAK) {
             switch (this.step) {
                 case 0 :
-                    this.setOpenDirection();
-                    ddalggak1.move(0.1);
-                    ddalggak2.stop();
-                    mag1.untilActivated();
-                    mag2.notUse();
-                    break;
-                case 1:
-                    mag1.untilInactivate();
-                    break;
-                case 2 :
-                    this.setOpenDirection();
-                    ddalggak1.stop();
-                    ddalggak2.move(0.1);
-                    mag1.notUse();
-                    mag2.untilActivated();
-                    break;
-                case 3:
-                    mag2.untilInactivate();
-                    break;
-                case 4:
-                    ddalggak1.stop();
-                    ddalggak2.stop();
-                    mag1.notUse();
-                    mag2.notUse();
-                    this.finishStep();
                     this.isDdalggakOpen = true;
+                    this.setOpenDirection();
+                    ddalggak1.moveUntilStuck(0.1);
+                    ddalggak2.stop();
+                    break;
+                case 1 :
+                    this.setOpenDirection();
+                    ddalggak1.stop();
+                    ddalggak2.moveUntilStuck(0.1);
+                    break;
+                case 2:
+                    ddalggak1.stop();
+                    ddalggak2.stop();
+                    this.finishStep();
                     break;
             }
         }
-    }
-
-    @Override
-    public void update(){
-        super.update();
     }
 }

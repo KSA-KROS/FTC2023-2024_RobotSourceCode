@@ -68,13 +68,13 @@ public class TeleOpMode extends OpMode {
         //this.prev_gamepad1_state = gamepad1_state;
 
         if (gamepad1.dpad_up) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_BACKWARD);
-        } else if (gamepad1.dpad_down) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
-        } else if (gamepad1.dpad_left) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad1.dpad_down) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
+        } else if (gamepad1.dpad_left) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
+        } else if (gamepad1.dpad_right) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_BACKWARD);
         } else if (gamepad1.left_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
         } else if (gamepad1.right_bumper) {
@@ -97,7 +97,7 @@ public class TeleOpMode extends OpMode {
             //this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
             this.wheel_part.offAutoDistance();
-            this.wheel_part.moveFreely(-gamepad1.left_stick_x, -gamepad1.left_stick_y);
+            this.wheel_part.moveFreely(-gamepad1.left_stick_y, gamepad1.left_stick_x);
         }
     }
 

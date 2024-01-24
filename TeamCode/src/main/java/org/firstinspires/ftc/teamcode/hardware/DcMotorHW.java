@@ -12,6 +12,8 @@ public class DcMotorHW extends Hardware {
     private boolean is_busy = false;
     private boolean is_free_moving = false;
     private boolean using_fixation = false;
+    private boolean move_until_stuck = false;
+
     private double fixation_power = 2.0;
     public double accumulated_moving_distance = 0.0;
 
@@ -129,12 +131,30 @@ public class DcMotorHW extends Hardware {
         }
     }
 
+    public void moveUntilStuck(double power) {
+        this.initEncoder();
+        this.is_busy = true;
+        this.move_until_stuck = true;
+        this.is_free_moving = false;
+        this.fixation_power = 2.0; // AUTOMATED
+        this.motor.setPower(power);
+    }
+
     @Override
     public void update() {
         if (this.is_busy) {
-            if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
-                this.is_busy = false;
-                this.motor.setPower(0);
+            if(this.move_until_stuck) {
+                if (this.motor.getCurrentPosition() == 0.0) {
+                    this.is_busy = false;
+                    this.move_until_stuck = false;
+                    this.motor.setPower(0);
+                }
+                this.initEncoder();
+            } else {
+                if (Math.abs(this.motor.getCurrentPosition()) > this.target_ticks) {
+                    this.is_busy = false;
+                    this.motor.setPower(0);
+                }
             }
         }
         else if (this.using_fixation && !this.is_free_moving && !this.synced) {
