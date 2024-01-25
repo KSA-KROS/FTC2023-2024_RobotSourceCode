@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.ServoHW;
 
 public class AirplanePart extends Part {
     double airplaneInitPos = 0.9;
-    double airplaneFlyPos = 0.1;
+    double airplaneFlyPos = 0.4;
     ServoHW airplane;
     public enum Command implements RobotCommand {
         FLY

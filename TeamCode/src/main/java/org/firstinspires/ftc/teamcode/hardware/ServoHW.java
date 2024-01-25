@@ -71,7 +71,6 @@ public class ServoHW extends Hardware {
                 double progress = (System.currentTimeMillis() - this.command_begin_time) / (double) (this.command_end_time - this.command_begin_time);
                 if (progress > 1.0) progress = 1.0;
                 if (!(progress >= 0.0)) progress = 0.0;
-                telemetry.addData("Degree", this.begin_value + (this.target_value - this.begin_value) * progress);
                 this.servo.setPosition(this.begin_value + (this.target_value - this.begin_value) * progress);
             }
         }

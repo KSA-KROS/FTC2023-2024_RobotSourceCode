@@ -28,6 +28,10 @@ public class WheelPart extends Part {
     private double autoview_speed;
     private boolean autoview_running = false;
 
+    public static WheelPart.Direction auto_wheel_move_dir = Direction.Forward;
+    public static int auto_wheel_move_length = 0;
+    public final static int auto_detect_pos_length = 1000;
+
     public IMUHW imuhw;
     public enum Command implements RobotCommand {
         MOVE_FORWARD,
@@ -158,10 +162,6 @@ public class WheelPart extends Part {
             }
             move(speed, dir);
         }
-        this.telemetry.addData("Cur Angle", currentAngle);
-        this.telemetry.addData("Tar Angle", angle);
-        this.telemetry.addData("Speed", speed);
-        this.telemetry.addData("Level", level);
         if (level < 0.5) {
             this.imuhw.setIsFinished();
             this.autoview_running = false;
@@ -203,9 +203,6 @@ public class WheelPart extends Part {
                 / Math.tan(Math.toRadians(this.angle_of_backboard));
         this.backboard_dist = D2-D3+d2-d1;
         double cur_dist = this.backboard_dist_sensor.getDistance();
-
-        this.telemetry.addData("Idl Dist = ", this.backboard_dist);
-        this.telemetry.addData("Cur Dist = ", cur_dist);
 
         if (this.use_auto && this.backboard_dist > 2.0){
             double range = 0.5;
@@ -323,7 +320,7 @@ public class WheelPart extends Part {
         else if (cmd == WheelPart.Command.MOVE_DETECT_POS) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, Direction.Forward, AutoOpModeLeft.detectPosLength);
+                    this.move(wheelSpeed, Direction.Forward, auto_detect_pos_length);
                     break;
                 case 1:
                     this.finishStep();
@@ -344,7 +341,7 @@ public class WheelPart extends Part {
         else if (cmd == WheelPart.Command.AUTO_MOVE) {
             switch (this.step) {
                 case 0:
-                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
+                    this.move(wheelSpeed, auto_wheel_move_dir, auto_wheel_move_length);
                     break;
                 case 1:
                     this.finishStep();
@@ -358,7 +355,7 @@ public class WheelPart extends Part {
                     this.delayTime(2000);
                     break;
                 case 1:
-                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
+                    this.move(wheelSpeed, auto_wheel_move_dir, auto_wheel_move_length);
                     break;
                 case 2:
                     this.move(wheelSpeed, 90.0); // LEFT VIEW
@@ -373,10 +370,10 @@ public class WheelPart extends Part {
                     this.delayTime(2000);
                     break;
                 case 1:
-                    this.move(wheelSpeed, AutoOpModeLeft.wheelMoveDir, AutoOpModeLeft.wheelMoveLength);
+                    this.move(wheelSpeed, auto_wheel_move_dir, auto_wheel_move_length);
                     break;
                 case 2:
-                    this.move(wheelSpeed, 90.0); // LEFT VIEW
+                    this.move(wheelSpeed, -90.0); // RIGHT VIEW
                     break;
                 case 3:
                     this.finishStep();

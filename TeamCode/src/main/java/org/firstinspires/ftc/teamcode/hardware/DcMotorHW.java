@@ -144,7 +144,7 @@ public class DcMotorHW extends Hardware {
     public void update() {
         if (this.is_busy) {
             if(this.move_until_stuck) {
-                if (this.motor.getCurrentPosition() == 0.0) {
+                if (Math.abs(this.motor.getCurrentPosition()) < 0.1) {
                     this.is_busy = false;
                     this.move_until_stuck = false;
                     this.motor.setPower(0);

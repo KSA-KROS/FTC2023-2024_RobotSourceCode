@@ -58,7 +58,7 @@ public class TeleOpMode extends OpMode {
 
         this.emergencyOnOFF();
 
-        this.telemetry.update();
+        //this.telemetry.update();
     }
 
     private void processGamepad1() {
@@ -160,6 +160,7 @@ public class TeleOpMode extends OpMode {
         // Airplane
         if (gamepad2.left_stick_button || gamepad2.right_stick_button) {
             this.airplane_part.startStep(AirplanePart.Command.FLY);
+            this.ddalggak_part.startStep(DdalggakPart.Command.CLOSE_PERFECTLY);
         }
     }
 

@@ -149,8 +149,8 @@ public class PincerPart extends Part {
                 switch (this.step) {
                     case 0:
                         this.is_able_to_move_linear = true;
-                        this.arm1.moveWithInterval(armDropPosition, 5000);
-                        this.arm2.moveWithInterval(armDropPosition, 5000);
+                        this.arm1.moveWithInterval(armDropPosition, 3000);
+                        this.arm2.moveWithInterval(armDropPosition, 3000);
                         break;
                     case 1:
                         this.wrist.moveDirectly(wristDropPosition);
@@ -186,8 +186,8 @@ public class PincerPart extends Part {
                 switch (this.step) {
                     case 0:
                         this.is_able_to_move_linear = true;
-                        this.arm1.moveWithInterval(armDropPositionForAuto, 9000);
-                        this.arm2.moveWithInterval(armDropPositionForAuto, 9000);
+                        this.arm1.moveWithInterval(armDropPositionForAuto, 7000);
+                        this.arm2.moveWithInterval(armDropPositionForAuto, 7000);
                         break;
                     case 1:
                         this.wrist.moveDirectly(wristDropPositionForAuto);
@@ -206,8 +206,8 @@ public class PincerPart extends Part {
                         this.wrist.moveDirectly(wristGrabPosition);
                         break;
                     case 1:
-                        this.arm1.moveWithInterval(armGrabPosition, 7000);
-                        this.arm2.moveWithInterval(armGrabPosition, 7000);
+                        this.arm1.moveWithInterval(armGrabPosition, 5000);
+                        this.arm2.moveWithInterval(armGrabPosition, 5000);
                         break;
                     case 2:
                         this.openLeftFinger();

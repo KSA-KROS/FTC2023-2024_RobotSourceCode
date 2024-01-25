@@ -17,7 +17,8 @@ public class DdalggakPart extends Part {
     public enum Command implements RobotCommand {
         OPEN_OR_CLOSE_DDALGGAK,
         OPEN_OR_CLOSE_DDALGGAK_GENTLY,
-        RESET_DDALGGAK
+        RESET_DDALGGAK,
+        CLOSE_PERFECTLY
     }
 
     // Constructor
@@ -178,6 +179,26 @@ public class DdalggakPart extends Part {
                     break;
                 case 1 :
                     this.setOpenDirection();
+                    ddalggak1.stop();
+                    ddalggak2.moveUntilStuck(0.1);
+                    break;
+                case 2:
+                    ddalggak1.stop();
+                    ddalggak2.stop();
+                    this.finishStep();
+                    break;
+            }
+        }
+        if (this.current_command == Command.CLOSE_PERFECTLY) {
+            switch (this.step) {
+                case 0 :
+                    this.isDdalggakOpen = true;
+                    this.setCloseDirection();
+                    ddalggak1.moveUntilStuck(0.1);
+                    ddalggak2.stop();
+                    break;
+                case 1 :
+                    this.setCloseDirection();
                     ddalggak1.stop();
                     ddalggak2.moveUntilStuck(0.1);
                     break;
