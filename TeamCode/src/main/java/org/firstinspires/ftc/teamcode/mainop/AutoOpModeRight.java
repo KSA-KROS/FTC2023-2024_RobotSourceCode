@@ -31,7 +31,7 @@ public class AutoOpModeRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // init
         this.linear_part = new LinearPart(hardwareMap, telemetry);
-        this.pincer_part = new PincerPart(hardwareMap, telemetry);
+        this.pincer_part = new PincerPart(hardwareMap, telemetry, true);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
         this.ddalggak_part = new DdalggakPart(hardwareMap, telemetry);
 
@@ -113,7 +113,7 @@ public class AutoOpModeRight extends LinearOpMode {
                 case 0:
                     // move to detect position
                     WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
-                    WheelPart.auto_wheel_move_length = 1100;
+                    WheelPart.auto_wheel_move_length = 1200;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     break;
                     /*
@@ -141,6 +141,7 @@ public class AutoOpModeRight extends LinearOpMode {
 
                      */
                 case 1:
+                    pincer_part.startStep(PincerPart.Command.AUTO_WRIST_SETTING);
                     if (dist.isObjectDetected()) {
                         wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
@@ -177,6 +178,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 4:
                     pincer_part.startStep(PincerPart.Command.DROP_PIXEL_LEFT);
+                    delayTime(1000);
                     break;
                 case 5:
                     if (pixelPos == 0) {
@@ -192,6 +194,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     WheelPart.auto_wheel_move_length = 800 + robotPixelPos;
                     wheel_part.startStep(WheelPart.Command.AUTO_RIGHT_WITH_SOME_DELAY);
                     linear_part.startStep(LinearPart.Command.MOVE_PSEUDO_UP_POSITION);
+                    break;
                 case 7:
                     this.finishCommand();
                     break;
@@ -204,7 +207,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 1:
                     WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
-                    WheelPart.auto_wheel_move_length = 900;
+                    WheelPart.auto_wheel_move_length = 1200;
                     pincer_part.startStep(PincerPart.Command.GRAB_PIXEL_LEFT);
                     linear_part.startStep(LinearPart.Command.MOVE_DROP_POSITION);
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
@@ -221,7 +224,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 4:
                     WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
-                    WheelPart.auto_wheel_move_length = 150 + (2-pixelPos) * 260;
+                    WheelPart.auto_wheel_move_length = 170 + (2-pixelPos) * 300;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     // move to drop position
                     break;
@@ -233,10 +236,13 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 6:
                     // drop pixels
-                    delayTime(1000);
+                    delayTime(2000);
                     pincer_part.startStep(PincerPart.Command.DROP_PIXEL_RIGHT);
                     break;
                 case 7:
+                    linear_part.startStep(LinearPart.Command.MOVE_PSEUDO_END_POSITION);
+                    break;
+                case 8:
                     this.finishCommand();
                     break;
             }
@@ -250,6 +256,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 1:
                     // rotate arm
+                    ddalggak_part.startStep(DdalggakPart.Command.RESET_DDALGGAK);
                     linear_part.startStep(LinearPart.Command.MOVE_ORIGINAL_POSITION);
                     pincer_part.startStep(PincerPart.Command.AUTO_MOVE_DROP_OR_GRAB_POSITION);
                     break;

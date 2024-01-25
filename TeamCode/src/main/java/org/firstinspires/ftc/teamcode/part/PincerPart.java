@@ -37,7 +37,8 @@ public class PincerPart extends Part {
         GRAB_OR_DROP_PIXEL_LEFT,
         GRAB_OR_DROP_PIXEL_RIGHT,
         MOVE_DROP_OR_GRAB_POSITION,
-        AUTO_MOVE_DROP_OR_GRAB_POSITION
+        AUTO_MOVE_DROP_OR_GRAB_POSITION,
+        AUTO_WRIST_SETTING
     }
 
     public boolean isAbleToMovingLinear() {
@@ -63,6 +64,35 @@ public class PincerPart extends Part {
         finger1.setInitialPosition(fingerOpenPosition);
         finger2.setInitialPosition(fingerOpenPosition + offset_for_left);
         wrist.setInitialPosition(wristGrabPosition);
+        arm1.setInitialPosition(armGrabPosition);
+        arm2.setInitialPosition(armGrabPosition);
+
+        this.hardware_manager.registerHardware(this.finger1).registerHardware(this.finger2);
+        this.hardware_manager.registerHardware(this.wrist);
+        this.hardware_manager.registerHardware(this.arm1).registerHardware(this.arm2);
+
+        this.is_left_opend = true;
+        this.is_right_opend = true;
+    }
+
+    public PincerPart(HardwareMap hwm, Telemetry tel, boolean auto) {
+        super(hwm, tel);
+
+        this.finger1 = new ServoHW("s0", hwm, telemetry);
+        this.finger2 = new ServoHW("s1", hwm, telemetry);
+        this.wrist = new ServoHW("s2", hwm, telemetry);
+        this.arm1 = new ServoHW("s3", hwm, telemetry);
+        this.arm2 = new ServoHW("s4", hwm, telemetry);
+
+        finger1.setDirection(Servo.Direction.FORWARD);
+        finger2.setDirection(Servo.Direction.REVERSE);
+        wrist.setDirection(Servo.Direction.FORWARD);
+        arm1.setDirection(Servo.Direction.FORWARD);
+        arm2.setDirection(Servo.Direction.REVERSE);
+
+        finger1.setInitialPosition(fingerClosePosition);
+        finger2.setInitialPosition(fingerClosePosition + offset_for_left);
+        wrist.setInitialPosition(wristDropPositionForAuto);
         arm1.setInitialPosition(armGrabPosition);
         arm2.setInitialPosition(armGrabPosition);
 
@@ -241,6 +271,10 @@ public class PincerPart extends Part {
         }
         else if (cmd == Command.GRAB_OR_DROP_PIXEL_RIGHT) {
             this.controlRightFinger();
+            this.finishStep();
+        }
+        else if (cmd == Command.AUTO_WRIST_SETTING) {
+            this.wrist.moveDirectly(this.wristGrabPosition);
             this.finishStep();
         }
     }

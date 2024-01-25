@@ -385,11 +385,9 @@ public class WheelPart extends Part {
     @Override
     public void update() {
         super.update();
-        /*
         if(this.autoview_running){
             this.autoview();
         }
-         */
     }
 
     @Override

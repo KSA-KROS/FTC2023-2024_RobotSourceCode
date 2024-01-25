@@ -17,6 +17,7 @@ public class LinearPart extends Part {
 
     public int dropPosition = 700;
     public int upPosition = 300;
+    public int endPosition = 100;
 
     public enum Command implements RobotCommand {
         MOVE_UP,
@@ -25,7 +26,8 @@ public class LinearPart extends Part {
         MOVE_DROP_POSITION,
         MOVE_PSEUDO_UP_POSITION,
         MOVE_DOWN_POWERFUL,
-        MOVE_ORIGINAL_POSITION
+        MOVE_ORIGINAL_POSITION,
+        MOVE_PSEUDO_END_POSITION
     }
 
     // Constructor
@@ -139,11 +141,22 @@ public class LinearPart extends Part {
                     break;
             }
         }
+        else if (cmd == Command.MOVE_PSEUDO_END_POSITION) {
+            switch (this.step) {
+                case 0:
+                    expand = true;
+                    moveLinearWithTargetTicks(linear_speed_go_down, endPosition);
+                    break;
+                case 1:
+                    this.finishStep();
+                    break;
+            }
+        }
         else if (cmd == Command.MOVE_ORIGINAL_POSITION) {
             switch (this.step) {
                 case 0:
                     expand = false;
-                    moveLinearWithTargetTicks(linear_speed_go_down, dropPosition + upPosition);
+                    moveLinearWithTargetTicks(linear_speed_go_down, dropPosition + upPosition + endPosition);
                     break;
                 case 1:
                     this.finishStep();

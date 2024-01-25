@@ -44,7 +44,7 @@ public class TeleOpModeLeft extends OpMode {
         // Update the parts
         this.linear_part.update();
         this.pincer_part.update();
-        this.wheel_part.update(this.linear_part.getLength());
+        this.wheel_part.update();
         this.ddalggak_part.update();
         this.airplane_part.update();
 
