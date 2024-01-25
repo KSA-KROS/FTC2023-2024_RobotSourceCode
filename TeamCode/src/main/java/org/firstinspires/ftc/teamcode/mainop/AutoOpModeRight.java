@@ -224,12 +224,12 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 4:
                     WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
-                    WheelPart.auto_wheel_move_length = 170 + (2-pixelPos) * 300;
+                    WheelPart.auto_wheel_move_length = 250 + (2-pixelPos) * 310;
                     wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     // move to drop position
                     break;
                 case 5:
-                    while (!dist.isObjectDetected(10)) {
+                    while (!dist.isObjectDetected(7)) {
                         wheel_part.move(wheel_part.wheelSpeed * 0.5, WheelPart.Direction.Forward);
                     }
                     wheel_part.startStep(WheelPart.Command.STOP);

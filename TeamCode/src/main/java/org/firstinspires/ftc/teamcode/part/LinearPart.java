@@ -17,7 +17,7 @@ public class LinearPart extends Part {
 
     public int dropPosition = 700;
     public int upPosition = 300;
-    public int endPosition = 100;
+    public int endPosition = 200;
 
     public enum Command implements RobotCommand {
         MOVE_UP,
