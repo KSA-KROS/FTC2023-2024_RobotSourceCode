@@ -5,14 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.DistSensorHW;
 import org.firstinspires.ftc.teamcode.part.DdalggakPart;
-import org.firstinspires.ftc.teamcode.part.HardwareManager;
 import org.firstinspires.ftc.teamcode.part.LinearPart;
 import org.firstinspires.ftc.teamcode.part.Part;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.RobotCommand;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
 
-@Autonomous(name = "AutoOpModeLeft", group = "")
+@Autonomous(name = "[BLUE] AutoOpMode", group = "")
 public class AutoOpModeLeft extends LinearOpMode {
     public LinearPart linear_part;
     public PincerPart pincer_part;
@@ -227,7 +226,7 @@ public class AutoOpModeLeft extends LinearOpMode {
                     // move to drop position
                     break;
                 case 5:
-                    while (!dist.isObjectDetected(11)) {
+                    while (!dist.isObjectDetected(10)) {
                         wheel_part.move(wheel_part.wheelSpeed * 0.5, WheelPart.Direction.Forward);
                     }
                     wheel_part.startStep(WheelPart.Command.STOP);
@@ -256,15 +255,15 @@ public class AutoOpModeLeft extends LinearOpMode {
                     pincer_part.startStep(PincerPart.Command.AUTO_MOVE_DROP_OR_GRAB_POSITION);
                     break;
                 case 2:
-                    WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
-                    WheelPart.auto_wheel_move_length = 850 + pixelPos * 250;
-                    wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+                    //WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
+                    //WheelPart.auto_wheel_move_length = 850 + pixelPos * 250;
+                    //wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     break;
                 case 3:
                     // move back a little
-                    WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
-                    WheelPart.auto_wheel_move_length = 250;
-                    wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+                    //WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
+                    //WheelPart.auto_wheel_move_length = 250;
+                    //wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     break;
                 case 4:
                     telemetry.addLine("FINISH");

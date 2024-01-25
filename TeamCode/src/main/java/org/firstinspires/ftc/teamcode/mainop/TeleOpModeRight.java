@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.part.LinearPart;
 import org.firstinspires.ftc.teamcode.part.PincerPart;
 import org.firstinspires.ftc.teamcode.part.WheelPart;
 
-@TeleOp(name = "TeleOpMode", group = "")
-public class TeleOpMode extends OpMode {
+@TeleOp(name = "[RED] TeleOpMode", group = "")
+public class TeleOpModeRight extends OpMode {
     private LinearPart linear_part;
     private PincerPart pincer_part;
     private WheelPart wheel_part;
@@ -68,13 +68,13 @@ public class TeleOpMode extends OpMode {
         //this.prev_gamepad1_state = gamepad1_state;
 
         if (gamepad1.dpad_up) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
-        } else if (gamepad1.dpad_down) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_LEFT);
+        } else if (gamepad1.dpad_down) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_RIGHT);
         } else if (gamepad1.dpad_left) {
-            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
-        } else if (gamepad1.dpad_right) {
             this.wheel_part.startStep(WheelPart.Command.MOVE_BACKWARD);
+        } else if (gamepad1.dpad_right) {
+            this.wheel_part.startStep(WheelPart.Command.MOVE_FORWARD);
         } else if (gamepad1.left_bumper) {
             this.wheel_part.startStep(WheelPart.Command.TURN_LEFT);
         } else if (gamepad1.right_bumper) {
@@ -83,21 +83,8 @@ public class TeleOpMode extends OpMode {
             this.wheel_part.move(gamepad1.left_trigger * 0.8, WheelPart.Direction.TurnLeft);
         } else if (gamepad1.right_trigger > 0.1) {
             this.wheel_part.move(gamepad1.right_trigger * 0.8, WheelPart.Direction.TurnRight);
-        } else if (gamepad1.triangle) {
-            this.wheel_part.onAutoDistance();
-            //this.wheel_part.startStep(WheelPart.Command.VIEW_FORWARD);
-        } else if (gamepad1.cross) {
-            this.wheel_part.onAutoDistance();
-            //this.wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
-        } else if (gamepad1.square) {
-            this.wheel_part.onAutoDistance();
-            //this.wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
-        } else if (gamepad1.circle) {
-            this.wheel_part.onAutoDistance();
-            //this.wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
         } else {
-            this.wheel_part.offAutoDistance();
-            this.wheel_part.moveFreely(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+            this.wheel_part.moveFreely(gamepad1.left_stick_y, -gamepad1.left_stick_x);
         }
     }
 

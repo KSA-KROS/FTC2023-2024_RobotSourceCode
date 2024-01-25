@@ -15,7 +15,7 @@ public class LinearPart extends Part {
     private final double linear_speed_go_up = 0.6;
     private boolean correcting_limit = false;
 
-    public int dropPosition = 900;
+    public int dropPosition = 700;
     public int upPosition = 300;
 
     public enum Command implements RobotCommand {
