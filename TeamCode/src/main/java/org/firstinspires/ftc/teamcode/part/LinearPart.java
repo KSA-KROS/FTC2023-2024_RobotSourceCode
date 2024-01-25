@@ -176,5 +176,14 @@ public class LinearPart extends Part {
         super.emergencyStop();
         this.linear1.stop();
         this.linear2.stop();
+        this.linear1.setUsingFixation(false);
+        this.linear2.setUsingFixation(false);
+    }
+
+    @Override
+    public void changeNormalState() {
+        super.changeNormalState();
+        this.linear1.setUsingFixation(true);
+        this.linear2.setUsingFixation(true);
     }
 }

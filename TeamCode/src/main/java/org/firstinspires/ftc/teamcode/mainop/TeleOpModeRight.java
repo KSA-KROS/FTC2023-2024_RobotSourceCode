@@ -156,6 +156,9 @@ public class TeleOpModeRight extends OpMode {
             if (gamepad1.touchpad && gamepad2.touchpad) {
                 // NORMAL STATE
                 this.is_emergency_mode = false;
+                this.pincer_part.changeNormalState();
+                this.linear_part.changeNormalState();
+                this.wheel_part.changeNormalState();
                 this.gamepad1.rumble(100);
                 this.gamepad2.rumble(100);
             }
