@@ -143,27 +143,29 @@ public class AutoOpModeRight extends LinearOpMode {
                 case 1:
                     pincer_part.startStep(PincerPart.Command.AUTO_WRIST_SETTING);
                     if (dist.isObjectDetected()) {
-                        wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
+                        WheelPart.auto_wheel_move_length = 10;
+                        WheelPart.auto_wheel_move_dir = WheelPart.Direction.Backward;
+                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
                         pixelPos = 1;
                     } else if (distright.isObjectDetected()) {
                         WheelPart.auto_wheel_move_length = 50;
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-
                         pixelPos = 2;
                     } else {
                         WheelPart.auto_wheel_move_length = 50;
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-
                         pixelPos = 0;
                     }
                     break;
                 case 2:
                     if (pixelPos == 2) {
                         wheel_part.startStep(WheelPart.Command.VIEW_LEFT);
-                    } else if (pixelPos == 0) {
+                    } else if (pixelPos == 1) {
+                        wheel_part.startStep(WheelPart.Command.VIEW_BACKWARD);
+                    } else {
                         wheel_part.startStep(WheelPart.Command.VIEW_RIGHT);
                     }
                     break;
@@ -172,8 +174,6 @@ public class AutoOpModeRight extends LinearOpMode {
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Backward;
                         WheelPart.auto_wheel_move_length = 50;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
-                        robotPixelPos = 100;
-                        WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
                     }
                     break;
                 case 4:
@@ -186,6 +186,12 @@ public class AutoOpModeRight extends LinearOpMode {
                         WheelPart.auto_wheel_move_length = 100;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Right;
+                        robotPixelPos = 100;
+                    } else if (pixelPos == 2) {
+                        WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
+                        WheelPart.auto_wheel_move_length = 40;
+                        wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
+                        WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
                         robotPixelPos = 100;
                     }
                     break;
@@ -214,7 +220,7 @@ public class AutoOpModeRight extends LinearOpMode {
                     break;
                 case 2:
                     // move to board
-                    while (!dist.isObjectDetected(50)) {
+                    while (!dist.isObjectDetected(37)) {
                         wheel_part.move(wheel_part.wheelSpeed, WheelPart.Direction.Left);
                     }
                     break;
@@ -298,7 +304,7 @@ public class AutoOpModeRight extends LinearOpMode {
     }
 
     // Check that the assigned command is finished
-    private boolean isFinished(){
+    public boolean isFinished(){
         return this.finish;
     }
 
