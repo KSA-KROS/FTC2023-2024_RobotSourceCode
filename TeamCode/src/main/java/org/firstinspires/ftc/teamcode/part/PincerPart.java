@@ -195,10 +195,11 @@ public class PincerPart extends Part {
                     case 0:
                         this.closeLeftFinger();
                         this.closeRightFinger();
-                        this.is_able_to_move_linear = false;
-                        this.wrist.moveDirectly(wristGrabPosition);
+                        this.delayTime(500);
                         break;
                     case 1:
+                        this.is_able_to_move_linear = false;
+                        this.wrist.moveDirectly(wristGrabPosition);
                         this.arm1.moveWithInterval(armGrabPosition, 3000);
                         this.arm2.moveWithInterval(armGrabPosition, 3000);
                         break;
@@ -232,10 +233,11 @@ public class PincerPart extends Part {
                     case 0:
                         this.closeLeftFinger();
                         this.closeRightFinger();
-                        this.is_able_to_move_linear = false;
-                        this.wrist.moveDirectly(wristGrabPosition);
+                        this.delayTime(500);
                         break;
                     case 1:
+                        this.is_able_to_move_linear = false;
+                        this.wrist.moveDirectly(wristGrabPosition);
                         this.arm1.moveWithInterval(armGrabPosition, 5000);
                         this.arm2.moveWithInterval(armGrabPosition, 5000);
                         break;

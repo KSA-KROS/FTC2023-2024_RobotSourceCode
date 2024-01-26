@@ -14,6 +14,9 @@ public class DdalggakPart extends Part {
 
     private long time_limit = 2000;
 
+    private boolean is_usable_1 = true;
+    private boolean is_usable_2 = true;
+
     public enum Command implements RobotCommand {
         OPEN_OR_CLOSE_DDALGGAK,
         OPEN_OR_CLOSE_DDALGGAK_GENTLY,
@@ -32,6 +35,19 @@ public class DdalggakPart extends Part {
         ddalggak2.setUsingBrake(true).setUsingFixation(false).setUsingEncoder(false);
 
         this.hardware_manager.registerHardware(ddalggak1).registerHardware(ddalggak2);
+    }
+
+    public void inactiveLeftDdalggak() {
+        this.is_usable_1 = false;
+    }
+
+    public void inactiveRightDdalggak() {
+        this.is_usable_2 = false;
+    }
+
+    public void activateAllDdalggak() {
+        this.is_usable_1 = true;
+        this.is_usable_2 = true;
     }
 
     private void setCloseDirection() {
@@ -78,8 +94,8 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0 :
                         this.setCloseDirection();
-                        ddalggak1.move(0.8, 60);
-                        ddalggak2.move(0.8, 60);
+                        if(is_usable_1) ddalggak1.move(0.8, 60);
+                        if(is_usable_2) ddalggak2.move(0.8, 60);
                         int trigger = 0;
                         long begin_time = System.currentTimeMillis();
                         while (trigger != 3) {
@@ -130,8 +146,8 @@ public class DdalggakPart extends Part {
                 switch (this.step) {
                     case 0 :
                         this.setCloseDirection();
-                        ddalggak1.move(0.2, 85);
-                        ddalggak2.move(0.2, 85);
+                        if (is_usable_1) ddalggak1.move(0.2, 85);
+                        if (is_usable_2) ddalggak2.move(0.2, 85);
                         int trigger = 0;
                         long begin_time = System.currentTimeMillis();
                         while (trigger != 3) {
@@ -147,8 +163,8 @@ public class DdalggakPart extends Part {
                             isDdalggakOpen = false;
                             this.finishStep();
                             this.setOpenDirection();
-                            ddalggak1.move(0.2, 10);
-                            ddalggak2.move(0.2, 10);
+                            if (is_usable_1) ddalggak1.move(0.2, 10);
+                            if (is_usable_2) ddalggak2.move(0.2, 10);
                             trigger = 0;
                             begin_time = System.currentTimeMillis();
                             while (trigger != 3) {
@@ -173,14 +189,18 @@ public class DdalggakPart extends Part {
             switch (this.step) {
                 case 0 :
                     this.isDdalggakOpen = true;
-                    this.setOpenDirection();
-                    ddalggak1.moveUntilStuck(0.1);
-                    ddalggak2.stop();
+                    if(is_usable_1) {
+                        this.setOpenDirection();
+                        ddalggak1.moveUntilStuck(0.1);
+                        ddalggak2.stop();
+                    }
                     break;
                 case 1 :
-                    this.setOpenDirection();
-                    ddalggak1.stop();
-                    ddalggak2.moveUntilStuck(0.1);
+                    if(is_usable_2) {
+                        this.setOpenDirection();
+                        ddalggak1.stop();
+                        ddalggak2.moveUntilStuck(0.1);
+                    }
                     break;
                 case 2:
                     ddalggak1.stop();
@@ -193,14 +213,18 @@ public class DdalggakPart extends Part {
             switch (this.step) {
                 case 0 :
                     this.isDdalggakOpen = true;
-                    this.setCloseDirection();
-                    ddalggak1.moveUntilStuck(0.1);
-                    ddalggak2.stop();
+                    if(is_usable_1) {
+                        this.setCloseDirection();
+                        ddalggak1.moveUntilStuck(0.1);
+                        ddalggak2.stop();
+                    }
                     break;
                 case 1 :
-                    this.setCloseDirection();
-                    ddalggak1.stop();
-                    ddalggak2.moveUntilStuck(0.1);
+                    if(is_usable_2) {
+                        this.setCloseDirection();
+                        ddalggak1.stop();
+                        ddalggak2.moveUntilStuck(0.1);
+                    }
                     break;
                 case 2:
                     ddalggak1.stop();

@@ -27,9 +27,7 @@ public class AutoOpModeRight extends LinearOpMode {
     public int robotPixelPos = 0;
     public int pixelPos = -1;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        // init
+    public void initAutoOp() {
         this.linear_part = new LinearPart(hardwareMap, telemetry);
         this.pincer_part = new PincerPart(hardwareMap, telemetry, true);
         this.wheel_part = new WheelPart(hardwareMap, telemetry);
@@ -37,7 +35,12 @@ public class AutoOpModeRight extends LinearOpMode {
 
         dist = new DistSensorHW("backboard", hardwareMap, telemetry);
         distright = new DistSensorHW("distright", hardwareMap, telemetry);
+    }
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+        // init
+        this.initAutoOp();
         waitForStart();
 
         // start
@@ -143,7 +146,7 @@ public class AutoOpModeRight extends LinearOpMode {
                 case 1:
                     pincer_part.startStep(PincerPart.Command.AUTO_WRIST_SETTING);
                     if (dist.isObjectDetected()) {
-                        WheelPart.auto_wheel_move_length = 10;
+                        WheelPart.auto_wheel_move_length = 5;
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Backward;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;

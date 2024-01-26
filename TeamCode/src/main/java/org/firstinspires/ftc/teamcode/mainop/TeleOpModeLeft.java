@@ -143,6 +143,16 @@ public class TeleOpModeLeft extends OpMode {
                 this.pincer_part.closeRightFinger();
             }
         }
+        if (gamepad2.left_trigger > 0.8 && gamepad2.right_trigger > 0.8) {
+            this.ddalggak_part.activateAllDdalggak();
+            gamepad2.rumble(500);
+        } else if (gamepad2.left_trigger > 0.8) {
+            this.ddalggak_part.inactiveLeftDdalggak();
+            gamepad2.rumble(500);
+        } else if (gamepad1.right_trigger > 0.8) {
+            this.ddalggak_part.inactiveRightDdalggak();
+            gamepad2.rumble(1000);
+        }
 
         // Airplane
         if (gamepad2.left_stick_button || gamepad2.right_stick_button) {
