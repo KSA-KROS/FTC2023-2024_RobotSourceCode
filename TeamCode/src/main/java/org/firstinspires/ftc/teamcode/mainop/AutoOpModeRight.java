@@ -175,7 +175,7 @@ public class AutoOpModeRight extends LinearOpMode {
                 case 3:
                     if (pixelPos == 0 || pixelPos == 2) {
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Backward;
-                        WheelPart.auto_wheel_move_length = 50;
+                        WheelPart.auto_wheel_move_length = 60;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                     }
                     break;
@@ -192,7 +192,7 @@ public class AutoOpModeRight extends LinearOpMode {
                         robotPixelPos = 100;
                     } else if (pixelPos == 2) {
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Forward;
-                        WheelPart.auto_wheel_move_length = 40;
+                        WheelPart.auto_wheel_move_length = 50;
                         wheel_part.startStep(WheelPart.Command.AUTO_MOVE);
                         WheelPart.auto_wheel_move_dir = WheelPart.Direction.Left;
                         robotPixelPos = 100;

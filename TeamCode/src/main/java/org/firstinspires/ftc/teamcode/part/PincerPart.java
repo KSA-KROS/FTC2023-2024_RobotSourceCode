@@ -179,10 +179,11 @@ public class PincerPart extends Part {
                 switch (this.step) {
                     case 0:
                         this.is_able_to_move_linear = true;
-                        this.arm1.moveWithInterval(armDropPosition, 3000);
-                        this.arm2.moveWithInterval(armDropPosition, 3000);
+                        this.arm1.moveWithInterval(armDropPosition, 5000);
+                        this.arm2.moveWithInterval(armDropPosition, 5000);
                         break;
                     case 1:
+
                         this.wrist.moveDirectly(wristDropPosition);
                         break;
                     case 2:
