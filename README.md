@@ -1,6 +1,6 @@
 # 2023-2024 KROS Robot Source Code
 
-### For the Korea 2023-2024 FIRST Tech Challenge (FTC)
+### For the 2023-2024 Korea Robot Championship (KRC, Korea Regional FTC Competition)
 ### Developed by 2024 KROS Programming Team
 
 Copyright by 2024 KROS of KSA
